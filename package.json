@@ -6,7 +6,8 @@
     "server": "cargo watch -x run",
     "tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --watch",
     "build-tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --minify",
-    "build": "npm run build-tailwind && cargo build --release"
+    "build": "npm run build-tailwind && cargo build --release",
+    "reset-db": "psql -d game-zone -f src/database/database.sql"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

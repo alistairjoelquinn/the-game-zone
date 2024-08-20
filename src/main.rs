@@ -5,7 +5,6 @@ mod model;
 mod state;
 mod utils;
 
-use axum::routing::get_service;
 use axum::Extension;
 use axum::{routing::get, serve, Router};
 use middleware::log::LoggingLayer;
@@ -13,8 +12,6 @@ use state::State;
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
-use tower_http::services::ServeFile;
-use utils::handle_internal_error;
 
 #[tokio::main]
 async fn main() {
@@ -23,11 +20,7 @@ async fn main() {
     let cors = utils::initialise_cors();
 
     let app = Router::new()
-        .nest_service(
-            "/",
-            get_service(ServeFile::new("static/index.html"))
-                .handle_error(handle_internal_error),
-        )
+        .route("/", get(handlers::home))
         .route("/user", get(handlers::get_user).post(handlers::post_user))
         .route(
             "/user/:id",
@@ -36,7 +29,6 @@ async fn main() {
                 .delete(handlers::delete_user),
         )
         .route("/users", get(handlers::get_users))
-        .route("/hello", get(handlers::hello))
         .nest_service("/static", ServeDir::new("static"))
         .layer(LoggingLayer)
         .layer(cors)
@@ -49,6 +41,8 @@ async fn main() {
             std::process::exit(1);
         }
     };
+
+    println!("Starting server on port 3333");
 
     serve(listener, app).await.unwrap_or_else(|e| {
         eprintln!("Error starting server: {}", e);

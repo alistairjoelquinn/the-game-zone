@@ -1,4 +1,4 @@
-use askama_axum::Template;
+use askama::Template;
 use axum::{
     extract::Path,
     response::{Html, IntoResponse},
@@ -12,7 +12,7 @@ use crate::{
         create_user, delete_user_by_id, fetch_all_users, fetch_user_by_id,
         update_user,
     },
-    model::{HelloTemplate, User},
+    model::{HomeTemplate, User},
     state::State,
 };
 
@@ -68,7 +68,11 @@ pub async fn get_users(
     Json(users)
 }
 
-pub async fn hello() -> Html<String> {
-    let template = HelloTemplate { name: "World" };
+pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
+    let template = HomeTemplate {
+        title: "Koen & Jonah's Game Zone",
+        name: "Daddy",
+        users: fetch_all_users(&state.db).await.unwrap(),
+    };
     Html(template.render().unwrap())
 }

@@ -12,7 +12,9 @@ pub struct User {
 }
 
 #[derive(Template)]
-#[template(path = "hello.html")]
-pub struct HelloTemplate<'a> {
+#[template(path = "home.html")]
+pub struct HomeTemplate<'a> {
+    pub title: &'a str,
     pub name: &'a str,
+    pub users: Vec<User>,
 }

@@ -1,0 +1,16 @@
+{% extends "layouts/main.html" %}
+
+<!-- main page content  -->
+{% block content %}
+<h1 class="font-serif text-green-800 bg-yellow-200 p-2">Hello, {{ name }}!</h1>
+<p
+  class="text-3xl text-red-600 bg-slate-400 leading-6 tracking-wide p-6 border border-black rounded-lg"
+>
+  this is the home page
+</p>
+<ul>
+  {% for user in users %}
+  <li>{{ user.first_name|e }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

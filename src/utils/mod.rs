@@ -1,5 +1,5 @@
 use axum::http::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE};
-use axum::http::{HeaderValue, Method, StatusCode};
+use axum::http::{HeaderValue, Method};
 use chrono::{DateTime, Local};
 use tower_http::cors::CorsLayer;
 
@@ -19,13 +19,4 @@ pub fn initialise_cors() -> CorsLayer {
         ])
         .allow_credentials(true)
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE])
-}
-
-pub async fn handle_internal_error(
-    error: impl std::error::Error,
-) -> (StatusCode, String) {
-    (
-        StatusCode::INTERNAL_SERVER_ERROR,
-        format!("Unhandled error: {}", error),
-    )
 }
