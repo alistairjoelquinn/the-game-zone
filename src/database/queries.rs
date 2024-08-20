@@ -10,7 +10,7 @@ pub async fn create_user(
     )
     .bind(user.first_name)
     .bind(user.last_name)
-    .bind(user.email)
+    .bind(user.username)
     .bind(user.password)
     .fetch_one(pool)
     .await
@@ -42,7 +42,7 @@ pub async fn update_user(
     )
     .bind(user.first_name)
     .bind(user.last_name)
-    .bind(user.email)
+    .bind(user.username)
     .bind(user.password)
     .bind(id)
     .fetch_one(pool)
