@@ -42,19 +42,16 @@ async fn main() {
         .layer(cors)
         .layer(Extension(state));
 
-    let listener = match TcpListener::bind("127.0.0.1:3000").await {
+    let listener = match TcpListener::bind("127.0.0.1:3333").await {
         Ok(listener) => listener,
         Err(e) => {
-            eprintln!("Failed to bind to port 3000: {}", e);
+            eprintln!("Failed to bind to port 3333: {}", e);
             std::process::exit(1);
         }
     };
 
-    match serve(listener, app).await {
-        Ok(_) => (),
-        Err(e) => {
-            eprintln!("Error starting server: {}", e);
-            std::process::exit(1);
-        }
-    }
+    serve(listener, app).await.unwrap_or_else(|e| {
+        eprintln!("Error starting server: {}", e);
+        std::process::exit(1);
+    });
 }

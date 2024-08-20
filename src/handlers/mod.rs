@@ -1,4 +1,4 @@
-use askama::Template;
+use askama_axum::Template;
 use axum::{
     extract::Path,
     response::{Html, IntoResponse},
