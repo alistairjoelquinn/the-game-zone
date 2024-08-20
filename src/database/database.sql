@@ -1,5 +1,6 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS high_scores;
 DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS users;
 
 
 CREATE TABLE users (
@@ -14,7 +15,7 @@ CREATE TABLE games (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL CHECK (title != ''),
   description TEXT NOT NULL CHECK (description != ''),
-  image_url VARCHAR(255) NOT NULL CHECK (image_url != ''),
+  image_url VARCHAR(255) NOT NULL CHECK (image_url != '')
 );
 
 CREATE TABLE high_scores (
