@@ -554,40 +554,6 @@ video {
   --tw-contain-style:  ;
 }
 
-.container {
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
 .block {
   display: block;
 }
@@ -596,93 +562,64 @@ video {
   height: 100%;
 }
 
-.min-h-screen {
-  min-height: 100vh;
+.h-screen {
+  height: 100vh;
 }
 
 .w-full {
   width: 100%;
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.rounded-xl {
-  border-radius: 0.75rem;
-}
-
-.border {
-  border-width: 1px;
+.rounded-2xl {
+  border-radius: 1rem;
 }
 
 .border-8 {
   border-width: 8px;
 }
 
-.border-black {
+.border-blue-700 {
   --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
+  border-color: rgb(29 78 216 / var(--tw-border-opacity));
 }
 
-.border-blue-900 {
-  --tw-border-opacity: 1;
-  border-color: rgb(30 58 138 / var(--tw-border-opacity));
-}
-
-.bg-slate-400 {
+.bg-white {
   --tw-bg-opacity: 1;
-  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
-}
-
-.bg-yellow-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 240 138 / var(--tw-bg-opacity));
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .bg-\[url\(\'\/static\/background\.jpg\'\)\] {
   background-image: url('/static/background.jpg');
 }
 
-.bg-\[url\(\'static\/background\.jpg\'\)\] {
-  background-image: url('static/background.jpg');
-}
-
-.p-2 {
-  padding: 0.5rem;
+.p-24 {
+  padding: 6rem;
 }
 
 .p-6 {
   padding: 1.5rem;
 }
 
-.p-24 {
-  padding: 6rem;
+@font-face {
+  font-family: "playpen";
+
+  src:
+    url("/static/fonts/playpen-regular.ttf") format("truetype"),
+    url("/static/fonts/playpen-bold.ttf") format("truetype");
+
+  font-weight: normal;
+
+  font-style: normal;
 }
 
-.font-serif {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-}
+@font-face {
+  font-family: "montserrat";
 
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
+  src:
+    url("/static/fonts/montserrat-regular.ttf") format("truetype"),
+    url("/static/fonts/montserrat.ttf") format("truetype");
 
-.leading-6 {
-  line-height: 1.5rem;
-}
+  font-weight: normal;
 
-.tracking-wide {
-  letter-spacing: 0.025em;
-}
-
-.text-green-800 {
-  --tw-text-opacity: 1;
-  color: rgb(22 101 52 / var(--tw-text-opacity));
-}
-
-.text-red-600 {
-  --tw-text-opacity: 1;
-  color: rgb(220 38 38 / var(--tw-text-opacity));
+  font-style: normal;
 }

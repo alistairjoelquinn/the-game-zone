@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "playpen";
+  src:
+    url("/static/fonts/playpen-regular.ttf") format("truetype"),
+    url("/static/fonts/playpen-bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "montserrat";
+  src:
+    url("/static/fonts/montserrat-regular.ttf") format("truetype"),
+    url("/static/fonts/montserrat.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
