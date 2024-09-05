@@ -1,17 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="static/main.css" />
-    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="static/htmx.min.js"></script>
     <title>{% block title %}{{ title }}{% endblock %}</title>
   </head>
   <body class="min-h-screen bg-[url('/static/background.jpg')] p-24">
-    <main>
-      {% block content %}
-      <p>Placeholder content</p>
-      {% endblock %}
-    </main>
+    {% block content %} {% endblock %}
   </body>
 </html>
