@@ -3,19 +3,33 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "playpen";
-  src:
-    url("/static/fonts/playpen-regular.ttf") format("truetype"),
-    url("/static/fonts/playpen-bold.ttf") format("truetype");
-  font-weight: normal;
+  font-family: "Playpen Sans";
+  src: url("/static/fonts/playpen-regular.ttf") format("truetype");
+  font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: "montserrat";
-  src:
-    url("/static/fonts/montserrat-regular.ttf") format("truetype"),
-    url("/static/fonts/montserrat.ttf") format("truetype");
-  font-weight: normal;
+  font-family: "Playpen Sans";
+  src: url("/static/fonts/playpen-bold.ttf") format("truetype");
+  font-weight: 700;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("/static/fonts/montserrat-regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("/static/fonts/montserrat-light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }

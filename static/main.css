@@ -554,8 +554,24 @@ video {
   --tw-contain-style:  ;
 }
 
+.relative {
+  position: relative;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
+}
+
 .block {
   display: block;
+}
+
+.flex {
+  display: flex;
 }
 
 .h-full {
@@ -570,17 +586,63 @@ video {
   width: 100%;
 }
 
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
 .rounded-2xl {
   border-radius: 1rem;
+}
+
+.rounded-\[20px\] {
+  border-radius: 20px;
+}
+
+.rounded-\[25px\] {
+  border-radius: 25px;
+}
+
+.rounded-\[45px\] {
+  border-radius: 45px;
 }
 
 .border-8 {
   border-width: 8px;
 }
 
+.border-\[14px\] {
+  border-width: 14px;
+}
+
 .border-blue-700 {
   --tw-border-opacity: 1;
   border-color: rgb(29 78 216 / var(--tw-border-opacity));
+}
+
+.border-blue-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 99 235 / var(--tw-border-opacity));
+}
+
+.border-blue-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(59 130 246 / var(--tw-border-opacity));
 }
 
 .bg-white {
@@ -600,26 +662,88 @@ video {
   padding: 1.5rem;
 }
 
-@font-face {
-  font-family: "playpen";
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
 
-  src:
-    url("/static/fonts/playpen-regular.ttf") format("truetype"),
-    url("/static/fonts/playpen-bold.ttf") format("truetype");
+.font-playpen {
+  font-family: "Playpen Sans", cursive;
+}
 
-  font-weight: normal;
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
 
-  font-style: normal;
+.text-7xl {
+  font-size: 4.5rem;
+  line-height: 1;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-green-800 {
+  --tw-text-opacity: 1;
+  color: rgb(22 101 52 / var(--tw-text-opacity));
+}
+
+.text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 @font-face {
-  font-family: "montserrat";
+  font-family: "Playpen Sans";
 
-  src:
-    url("/static/fonts/montserrat-regular.ttf") format("truetype"),
-    url("/static/fonts/montserrat.ttf") format("truetype");
+  src: url("/static/fonts/playpen-regular.ttf") format("truetype");
 
-  font-weight: normal;
+  font-weight: 400;
 
   font-style: normal;
+
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Playpen Sans";
+
+  src: url("/static/fonts/playpen-bold.ttf") format("truetype");
+
+  font-weight: 700;
+
+  font-style: normal;
+
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+
+  src: url("/static/fonts/montserrat-regular.ttf") format("truetype");
+
+  font-weight: 400;
+
+  font-style: normal;
+
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat";
+
+  src: url("/static/fonts/montserrat-light.ttf") format("truetype");
+
+  font-weight: 300;
+
+  font-style: normal;
+
+  font-display: swap;
 }
