@@ -558,6 +558,10 @@ video {
   display: block;
 }
 
+.min-h-screen {
+  min-height: 100vh;
+}
+
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -581,12 +585,24 @@ video {
   background-color: rgb(254 240 138 / var(--tw-bg-opacity));
 }
 
+.bg-\[url\(\'\/static\/background\.jpg\'\)\] {
+  background-image: url('/static/background.jpg');
+}
+
+.bg-\[url\(\'static\/background\.jpg\'\)\] {
+  background-image: url('static/background.jpg');
+}
+
 .p-2 {
   padding: 0.5rem;
 }
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-24 {
+  padding: 6rem;
 }
 
 .font-serif {
