@@ -2,12 +2,11 @@ DROP TABLE IF EXISTS high_scores;
 DROP TABLE IF EXISTS games;
 DROP TABLE IF EXISTS users;
 
-
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   first_name VARCHAR(255) NOT NULL CHECK (first_name != ''),
   last_name VARCHAR(255) NOT NULL CHECK (last_name != ''),
-  username VARCHAR NOT NULL UNIQUE,
+  image VARCHAR(255) NOT NULL CHECK (image != ''),
   password VARCHAR NOT NULL
 );
 
@@ -22,5 +21,6 @@ CREATE TABLE high_scores (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
   game_id INTEGER REFERENCES games(id),
-  score INTEGER NOT NULL
+  score INTEGER NOT NULL,
+  lower_score_is_better BOOLEAN NOT NULL
 );
