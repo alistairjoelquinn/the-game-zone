@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run tailwind\"",
-    "server": "cargo watch -x run",
+    "server": "RUST_LOG=debug cargo watch -x run",
     "tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --watch",
     "build-tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --minify",
     "build": "npm run build-tailwind && cargo build --release",

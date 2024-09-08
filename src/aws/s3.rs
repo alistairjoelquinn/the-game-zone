@@ -2,12 +2,14 @@ use std::sync::Arc;
 
 use crate::state::State;
 use anyhow::{Context, Result};
+use aws_config::default_provider::credentials::DefaultCredentialsChain;
 use aws_config::meta::region::RegionProviderChain;
+use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::{config::Region, Client};
 use axum::http::{header, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::Extension;
-use dotenv::dotenv;
+use tracing::{error, info, warn};
 
 #[derive(Debug)]
 pub struct S3Client {
@@ -16,21 +18,24 @@ pub struct S3Client {
 
 impl S3Client {
     pub async fn new() -> Result<Self> {
-        dotenv().context("Failed to load .env file")?;
+        dotenv::dotenv().context("Failed to load .env file")?;
 
         let region_provider =
             RegionProviderChain::first_try(Region::new("us-east-1"));
-        // let _region = region_provider.region().await.unwrap();
 
-        let shared_config =
-            aws_config::defaults(aws_config::BehaviorVersion::latest())
-                .region(region_provider)
-                .load()
-                .await;
+        // Use the default credentials chain
+        let credentials_provider =
+            DefaultCredentialsChain::builder().build().await;
+
+        let shared_config = aws_config::from_env()
+            .region(region_provider)
+            .credentials_provider(credentials_provider)
+            .load()
+            .await;
 
         let client = Client::new(&shared_config);
 
-        Ok(Self { client }) // Your other methods...
+        Ok(Self { client })
     }
 }
 
@@ -46,39 +51,96 @@ pub async fn init_s3() -> Result<Arc<S3Client>> {
         }
     }
 }
+
 pub async fn get_s3_object(
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
-    async {
-        println!("Fetching image from S3");
-        let obj = state
-            .s3
-            .client
-            .get_object()
-            .bucket("your-bucket-name")
-            .key("path/to/image.jpg")
-            .send()
-            .await
-            .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
-
-        let data = obj
-            .body
-            .collect()
-            .await
-            .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?
-            .into_bytes();
-
-        let content_type = obj
-            .content_type
-            .unwrap_or("application/octet-stream".to_string());
-
-        Ok::<_, (StatusCode, String)>(
-            Response::builder()
-                .status(StatusCode::OK)
-                .header(header::CONTENT_TYPE, content_type)
-                .body(axum::body::Body::from(data))
-                .unwrap(),
-        )
+    match retrieve_s3_object(state).await {
+        Ok(Some(response)) => response,
+        Ok(None) => {
+            error!("S3 object not found");
+            (StatusCode::NOT_FOUND, "Object not found").into_response()
+        }
+        Err(e) => {
+            error!("Failed to retrieve S3 object: {:?}", e);
+            (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response()
+        }
     }
-    .await
+}
+
+async fn retrieve_s3_object(state: Arc<State>) -> Result<Option<Response>> {
+    info!("Starting S3 object retrieval");
+
+    let bucket = "askama-game-zone";
+    let key = "IMG_6740.jpeg";
+
+    info!(
+        "Attempting to fetch object from S3. Bucket: {}, Key: {}",
+        bucket, key
+    );
+
+    let obj = match state
+        .s3
+        .client
+        .get_object()
+        .bucket(bucket)
+        .key(key)
+        .send()
+        .await
+    {
+        Ok(output) => output,
+        Err(err) => match err {
+            SdkError::ServiceError(service_err) => {
+                if service_err.err().is_no_such_key() {
+                    info!("S3 object not found");
+                    return Ok(None);
+                }
+                error!("S3 service error: {:?}", service_err);
+                return Err(anyhow::anyhow!(
+                    "S3 service error: {:?}",
+                    service_err
+                ));
+            }
+            _ => {
+                error!("S3 error: {:?}", err);
+                return Err(anyhow::anyhow!("S3 error: {:?}", err));
+            }
+        },
+    };
+
+    info!("Successfully retrieved object from S3");
+
+    info!("Reading object data");
+    let data = obj
+        .body
+        .collect()
+        .await
+        .map_err(|e| {
+            error!("Failed to read S3 object body: {:?}", e);
+            anyhow::anyhow!("Failed to read S3 object body: {:?}", e)
+        })?
+        .into_bytes();
+    info!("Successfully read {} bytes of object data", data.len());
+
+    let content_type = obj
+        .content_type
+        .clone()
+        .unwrap_or_else(|| {
+            warn!("Content-Type not provided by S3, defaulting to application/octet-stream");
+            "application/octet-stream".to_string()
+        });
+    info!("Content-Type: {}", content_type);
+
+    info!("Constructing response");
+    let response = Response::builder()
+        .status(StatusCode::OK)
+        .header(header::CONTENT_TYPE, content_type)
+        .body(axum::body::Body::from(data))
+        .map_err(|e| {
+            error!("Failed to construct response: {:?}", e);
+            anyhow::anyhow!("Failed to construct response: {:?}", e)
+        })?;
+
+    info!("Successfully constructed response");
+    Ok(Some(response))
 }
