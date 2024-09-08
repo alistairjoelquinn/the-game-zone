@@ -63,6 +63,7 @@ pub async fn get_s3_object(
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
     let name = params.name.clone().unwrap_or_else(|| "default".to_string());
+    println!("Name: {}", name);
     match retrieve_s3_object(state, name).await {
         Ok(Some(response)) => response,
         Ok(None) => {
