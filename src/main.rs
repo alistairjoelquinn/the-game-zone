@@ -1,3 +1,4 @@
+mod aws;
 mod database;
 mod handlers;
 mod middleware;
@@ -5,6 +6,7 @@ mod model;
 mod state;
 mod utils;
 
+use aws::s3::S3Client;
 use axum::Extension;
 use axum::{routing::get, serve, Router};
 use middleware::log::LoggingLayer;

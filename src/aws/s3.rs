@@ -2,11 +2,11 @@ use aws_config::BehaviorVersion;
 use aws_sdk_s3::{Client, Error};
 use bytes::Bytes;
 
-pub struct S3Client {
+pub struct S3 {
     client: Client,
 }
 
-impl S3Client {
+impl S3 {
     pub async fn new() -> Result<Self, Error> {
         let config = aws_config::from_env()
             .behavior_version(BehaviorVersion::v2023_11_09())
@@ -17,7 +17,7 @@ impl S3Client {
         Ok(S3Client { client })
     }
 
-    pub async fn upload_file(
+    pub async fn upload(
         &self,
         bucket: &str,
         key: &str,
@@ -34,7 +34,7 @@ impl S3Client {
         Ok(())
     }
 
-    pub async fn download_file(
+    pub async fn download(
         &self,
         bucket: &str,
         key: &str,
