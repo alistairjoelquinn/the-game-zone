@@ -6,9 +6,8 @@ mod model;
 mod state;
 mod utils;
 
-use aws::s3::S3Client;
-use axum::Extension;
-use axum::{routing::get, serve, Router};
+use anyhow::{Context, Result};
+use axum::{routing::get, Extension, Router};
 use middleware::log::LoggingLayer;
 use state::State;
 use std::sync::Arc;
@@ -16,23 +15,36 @@ use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
-async fn main() {
-    let db = database::initialise_database().await;
-    let state = Arc::new(State { db });
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cors = utils::initialise_cors();
+    let db = database::initialise_database().await?;
+    let s3 = aws::s3::init_s3()
+        .await
+        .context("Failed to initialize S3 client")?;
+    let state = Arc::new(State { db, s3 });
 
     let app = Router::new()
         .route("/", get(handlers::home))
         .route("/user", get(handlers::get_user).post(handlers::post_user))
         .route(
             "/koen",
-            get(|| async {
+            get(|Extension(state): Extension<Arc<State>>| async move {
                 println!("running Koen code");
-                let s3: S3Client = S3Client::new().await.unwrap();
-                println!("S3 client: {:?}", s3);
-
-                let client = s3.client;
-                println!("Client: {:?}", client);
+                let obj = state
+                    .s3
+                    .client
+                    .get_object()
+                    .bucket("your-bucket-name")
+                    .key("path/to/image.jpg")
+                    .send()
+                    .await
+                    .context("Failed to get object from S3")?;
+                let _data = obj
+                    .body
+                    .collect()
+                    .await
+                    .context("Failed to collect S3 object body")?;
+                Ok::<_, anyhow::Error>(axum::response::Html("<p>hi</p>"))
             }),
         )
         .route(
@@ -47,18 +59,14 @@ async fn main() {
         .layer(cors)
         .layer(Extension(state));
 
-    let listener = match TcpListener::bind("127.0.0.1:3333").await {
-        Ok(listener) => listener,
-        Err(e) => {
-            eprintln!("Failed to bind to port 3333: {}", e);
-            std::process::exit(1);
-        }
-    };
-
+    let listener = TcpListener::bind("127.0.0.1:3333")
+        .await
+        .context("Failed to bind to port 3333")?;
     println!("Starting server on port 3333");
 
-    serve(listener, app).await.unwrap_or_else(|e| {
-        eprintln!("Error starting server: {}", e);
-        std::process::exit(1);
-    });
+    axum::serve(listener, app)
+        .await
+        .context("Error starting server")?;
+
+    Ok(())
 }
