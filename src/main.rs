@@ -26,27 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .route("/", get(handlers::home))
         .route("/user", get(handlers::get_user).post(handlers::post_user))
-        .route(
-            "/koen",
-            get(|Extension(state): Extension<Arc<State>>| async move {
-                println!("running Koen code");
-                let obj = state
-                    .s3
-                    .client
-                    .get_object()
-                    .bucket("your-bucket-name")
-                    .key("path/to/image.jpg")
-                    .send()
-                    .await
-                    .context("Failed to get object from S3")?;
-                let _data = obj
-                    .body
-                    .collect()
-                    .await
-                    .context("Failed to collect S3 object body")?;
-                Ok::<_, anyhow::Error>(axum::response::Html("<p>hi</p>"))
-            }),
-        )
+        .route("/koen", get(aws::s3::get_s3_object))
         .route(
             "/user/:id",
             get(handlers::get_user_by_id)
