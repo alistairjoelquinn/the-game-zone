@@ -6,9 +6,11 @@ use aws_config::default_provider::credentials::DefaultCredentialsChain;
 use aws_config::meta::region::RegionProviderChain;
 use aws_sdk_s3::error::SdkError;
 use aws_sdk_s3::{config::Region, Client};
+use axum::extract::Query;
 use axum::http::{header, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::Extension;
+use serde::Deserialize;
 use tracing::{error, info, warn};
 
 #[derive(Debug)]
@@ -52,10 +54,16 @@ pub async fn init_s3() -> Result<Arc<S3Client>> {
     }
 }
 
+#[derive(Deserialize)]
+pub struct UserParams {
+    pub name: Option<String>,
+}
 pub async fn get_s3_object(
+    Query(params): Query<UserParams>,
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
-    match retrieve_s3_object(state).await {
+    let name = params.name.clone().unwrap_or_else(|| "default".to_string());
+    match retrieve_s3_object(state, name).await {
         Ok(Some(response)) => response,
         Ok(None) => {
             error!("S3 object not found");
@@ -68,11 +76,12 @@ pub async fn get_s3_object(
     }
 }
 
-async fn retrieve_s3_object(state: Arc<State>) -> Result<Option<Response>> {
-    info!("Starting S3 object retrieval");
-
+async fn retrieve_s3_object(
+    state: Arc<State>,
+    name: String,
+) -> Result<Option<Response>> {
     let bucket = "askama-game-zone";
-    let key = "IMG_6740.jpeg";
+    let key = format!("{}.jpeg", name);
 
     info!(
         "Attempting to fetch object from S3. Bucket: {}, Key: {}",
