@@ -1,52 +1,36 @@
-use aws_config::BehaviorVersion;
-use aws_sdk_s3::{Client, Error};
-use bytes::Bytes;
+use anyhow::{Context, Result};
+use aws_config::meta::region::RegionProviderChain;
+use aws_sdk_s3::{config::Region, Client};
+use dotenv::dotenv;
 
-pub struct S3 {
-    client: Client,
+#[derive(Debug)]
+pub struct S3Client {
+    pub client: Client,
 }
 
-impl S3 {
-    pub async fn new() -> Result<Self, Error> {
-        let config = aws_config::from_env()
-            .behavior_version(BehaviorVersion::v2023_11_09())
-            .load()
-            .await;
-        let client = Client::new(&config);
+impl S3Client {
+    pub async fn new() -> Result<Self> {
+        let region_provider =
+            RegionProviderChain::first_try(Region::new("us-east-1"));
+        let region = region_provider.region().await.unwrap();
 
-        Ok(S3Client { client })
-    }
+        println!("Region: {:?}", region);
 
-    pub async fn upload(
-        &self,
-        bucket: &str,
-        key: &str,
-        body: Vec<u8>,
-    ) -> Result<(), Error> {
-        self.client
-            .put_object()
-            .bucket(bucket)
-            .key(key)
-            .body(Bytes::from(body))
-            .send()
-            .await?;
+        let shared_config =
+            aws_config::defaults(aws_config::BehaviorVersion::latest())
+                .region(region_provider)
+                .load()
+                .await;
 
-        Ok(())
-    }
+        println!("Shared config: {:?}", shared_config);
 
-    pub async fn download(
-        &self,
-        bucket: &str,
-        key: &str,
-    ) -> Result<Vec<u8>, Error> {
-        let resp = self
-            .client
-            .get_object()
-            .bucket(bucket)
-            .key(key)
-            .send()
-            .await?;
+        let client = Client::new(&shared_config);
 
-        Ok(resp.body.collect().await?.into_bytes().to_vec())
+        println!("Client: {:?}", client);
+
+        // Load the .env file
+        dotenv().context("Failed to load .env file")?;
+
+        Ok(Self { client }) // Your other methods...
     }
 }

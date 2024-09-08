@@ -15,6 +15,5 @@ pub struct User {
 #[template(path = "home.html")]
 pub struct HomeTemplate<'a> {
     pub title: &'a str,
-    pub name: &'a str,
     pub users: Vec<User>,
 }

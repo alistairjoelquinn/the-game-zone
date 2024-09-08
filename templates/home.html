@@ -9,7 +9,20 @@
   <div
     class="relative z-10 w-full flex-1 rounded-[45px] border-[14px] border-blue-500 bg-white p-6"
   >
-    <!-- Your content goes here -->
+    // create a loop over the users array ┊
+    <!-- iterate over users -->
+    {% for user in users %}
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <img alt="{{ user.first_name }}" class="h-16 w-16 rounded-full" />
+        <div>
+          <h3 class="font-playpen text-2xl text-gray-900">
+            {{ user.first_name }}
+          </h3>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
+  {% endblock %}
 </div>
-{% endblock %}

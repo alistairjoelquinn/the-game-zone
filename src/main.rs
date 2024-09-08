@@ -25,6 +25,17 @@ async fn main() {
         .route("/", get(handlers::home))
         .route("/user", get(handlers::get_user).post(handlers::post_user))
         .route(
+            "/koen",
+            get(|| async {
+                println!("running Koen code");
+                let s3: S3Client = S3Client::new().await.unwrap();
+                println!("S3 client: {:?}", s3);
+
+                let client = s3.client;
+                println!("Client: {:?}", client);
+            }),
+        )
+        .route(
             "/user/:id",
             get(handlers::get_user_by_id)
                 .patch(handlers::patch_user)
