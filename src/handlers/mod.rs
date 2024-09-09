@@ -69,11 +69,13 @@ pub async fn get_users(
 }
 
 pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
-    println!("running home route");
+    let mut users = fetch_all_users(&state.db).await.unwrap();
+    users.reverse();
+
     let template = HomeTemplate {
         title: "Koen & Jonah's Game Zone",
-        users: fetch_all_users(&state.db).await.unwrap(),
+        users,
     };
-    println!("after creating template");
+
     Html(template.render().unwrap())
 }

@@ -7,17 +7,19 @@
     The Game Zone
   </h2>
   <div
-    class="relative z-10 w-full flex-1 rounded-[45px] border-[14px] border-blue-500 bg-white p-6"
+    class="relative z-10 flex w-full flex-1 rounded-[45px] border-[14px] border-blue-500 bg-white p-6"
   >
     <!-- iterate over users -->
     {% for user in users %}
-    <div class="flex items-center gap-4">
+    <div class="relative h-full w-full items-center gap-4">
       <img
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
-        class="h-16 w-16 rounded-full"
+        class="absolute h-full w-full"
       />
-      <h3 class="font-playpen text-2xl text-gray-900">{{ user.first_name }}</h3>
+      <h3 class="absolute m-auto font-playpen text-2xl text-gray-900">
+        {{ user.first_name }}
+      </h3>
     </div>
     {% endfor %}
   </div>
