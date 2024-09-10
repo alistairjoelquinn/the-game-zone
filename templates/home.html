@@ -2,26 +2,27 @@
 
 <!-- component content -->
 {% block content %}
-<div class="flex h-full w-full flex-col items-center justify-evenly gap-10">
+<div class="flex h-full w-full flex-col items-center justify-evenly gap-16">
   <h2 class="relative z-20 font-playpen text-[80px] leading-10 text-gray-900">
     The Game Zone
   </h2>
   <div
-    class="relative z-10 flex w-full flex-1 rounded-[45px] border-[14px] border-blue-500 bg-white p-6"
+    class="relative z-10 flex w-full flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
   >
     <!-- iterate over users -->
     {% for user in users %}
-    <div class="relative h-full w-full items-center gap-4">
+    <div
+      class="relative flex h-full w-full items-center justify-center gap-4 overflow-hidden"
+    >
       <img
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
-        class="absolute h-full w-full"
+        class="absolute h-full w-full object-cover"
       />
-      <h3 class="absolute m-auto font-playpen text-2xl text-gray-900">
+      <h3 class="relative z-20 font-playpen text-3xl text-white">
         {{ user.first_name }}
       </h3>
     </div>
-    {% endfor %}
+    {% endfor %} {% endblock %}
   </div>
-  {% endblock %}
 </div>
