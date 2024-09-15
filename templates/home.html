@@ -7,19 +7,19 @@
     The Game Zone
   </h2>
   <div
-    class="relative z-10 flex w-full flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
+    class="relative z-10 flex w-full max-w-4xl flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
   >
     <!-- iterate over users -->
     {% for user in users %}
     <div
-      class="relative flex h-full w-full items-center justify-center gap-4 overflow-hidden"
+      class="relative flex h-full w-full items-end justify-center gap-4 overflow-hidden"
     >
       <img
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
         class="absolute h-full w-full object-cover"
       />
-      <h3 class="relative z-20 font-playpen text-3xl text-white">
+      <h3 class="text-shadow z-20 pb-32 font-playpen text-5xl text-white">
         {{ user.first_name }}
       </h3>
     </div>
