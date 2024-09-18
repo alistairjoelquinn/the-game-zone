@@ -9,18 +9,25 @@
     The Game Zone
   </h2>
   <div
+    id="container"
     class="relative z-10 flex w-full max-w-4xl flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
   >
     <!-- iterate over users -->
     {% for user in users %}
-    <div class="relative h-full w-1/2 overflow-hidden hover:cursor-pointer">
+    <div
+      hx-get="/login"
+      hx-trigger="click"
+      hx-target="#container"
+      hx-swap="innerHTML"
+      class="group relative h-full w-1/2 overflow-hidden transition-all duration-500 hover:w-full hover:cursor-pointer"
+    >
       <img
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
         class="absolute inset-0 h-full w-full object-cover"
       />
       <h3
-        class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 font-playpen text-5xl text-white"
+        class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
       >
         {{ user.first_name }}
       </h3>
