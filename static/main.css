@@ -657,6 +657,20 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fadein {
+  animation: fadein 1s forwards;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -901,21 +915,6 @@ video {
 
 .text-shadow {
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-#login-container {
-  animation: fadein 0.5s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
 }
 
 .hover\:w-full:hover {
