@@ -37,3 +37,23 @@
 .text-shadow {
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
+
+.fadeout {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+#login-container {
+  animation: fadein 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

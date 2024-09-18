@@ -18,10 +18,12 @@
       hx-get="/login-field?user={{ user.first_name }}"
       hx-trigger="click"
       hx-target="#container"
-      hx-swap="innerHTML"
+      hx-swap="innerHTML transition:fade:500ms"
+      _="on htmx:beforeRequest add .fadeout to #user-image-{{user.username}}"
       class="group relative h-full w-1/2 overflow-hidden transition-all duration-500 hover:w-full hover:cursor-pointer"
     >
       <img
+        id="user-image-{{user.username}}"
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
         class="absolute inset-0 h-full w-full object-cover"
