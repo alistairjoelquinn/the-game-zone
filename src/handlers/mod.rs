@@ -104,7 +104,7 @@ pub struct LoginBody {
 pub async fn login(
     Form(form): Form<LoginBody>,
     Extension(state): Extension<Arc<State>>,
-) -> Response<Body> {
+) -> impl IntoResponse {
     let first_name = form.first_name;
     let password = form.password;
 
