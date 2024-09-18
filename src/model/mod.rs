@@ -23,3 +23,9 @@ pub struct HomeTemplate<'a> {
 pub struct LoginFieldTemplate<'a> {
     pub first_name: &'a str,
 }
+
+#[derive(Template)]
+#[template(path = "wrong-password.html")]
+pub struct WrongPasswordTemplate<'a> {
+    pub first_name: &'a str,
+}

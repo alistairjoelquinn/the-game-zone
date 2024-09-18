@@ -26,6 +26,16 @@ pub async fn fetch_user_by_id(
         .await
 }
 
+pub async fn fetch_user_by_first_name(
+    pool: &PgPool,
+    first_name: &String,
+) -> Result<User, sqlx::Error> {
+    sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+        .bind(first_name)
+        .fetch_one(pool)
+        .await
+}
+
 pub async fn fetch_all_users(pool: &PgPool) -> Result<Vec<User>, sqlx::Error> {
     sqlx::query_as::<_, User>("SELECT * FROM users")
         .fetch_all(pool)

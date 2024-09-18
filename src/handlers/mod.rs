@@ -1,7 +1,7 @@
 use askama::Template;
 use axum::{
     extract::{Path, Query},
-    response::{Html, IntoResponse},
+    response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
 use serde::{Deserialize, Serialize};
@@ -9,10 +9,10 @@ use std::sync::Arc;
 
 use crate::{
     database::queries::{
-        create_user, delete_user_by_id, fetch_all_users, fetch_user_by_id,
-        update_user,
+        create_user, delete_user_by_id, fetch_all_users,
+        fetch_user_by_first_name, fetch_user_by_id, update_user,
     },
-    model::{HomeTemplate, LoginFieldTemplate, User},
+    model::{HomeTemplate, LoginFieldTemplate, User, WrongPasswordTemplate},
     state::State,
 };
 
@@ -88,9 +88,36 @@ pub struct LoginFieldQuery {
 pub async fn login_field(
     Query(params): Query<LoginFieldQuery>,
 ) -> Html<String> {
-    println!("Name: {}", params.user);
     let name = params.user;
     let template = LoginFieldTemplate { first_name: &name };
 
     Html(template.render().unwrap())
+}
+
+pub struct LoginBody {
+    pub first_name: String,
+    pub password: String,
+}
+
+pub async fn login(
+    Form(form): Form<LoginBody>,
+    Extension(state): Extension<Arc<State>>,
+) -> impl IntoResponse {
+    let first_name = form.first_name;
+    let password = form.password;
+
+    let mut user = fetch_user_by_first_name(&state.db, &first_name)
+        .await
+        .unwrap();
+
+    let is_authenticated = user.password == password;
+
+    if !is_authenticated {
+        let template = WrongPasswordTemplate {
+            first_name: &first_name,
+        };
+        Html(template.render().unwrap())
+    } else {
+        Redirect::to("/game-zone").into_response()
+    }
 }
