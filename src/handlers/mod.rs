@@ -1,8 +1,8 @@
 use askama::Template;
 use axum::{
     extract::{Path, Query},
-    response::{Html, IntoResponse, Redirect},
-    Extension, Json,
+    response::{Html, IntoResponse, Redirect, Response},
+    Extension, Form, Json,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -99,6 +99,20 @@ pub struct LoginBody {
     pub password: String,
 }
 
+enum LoginResponse {
+    Html(Html<String>),
+    Redirect(Redirect),
+}
+
+impl IntoResponse for LoginResponse {
+    fn into_response(self) -> Response {
+        match self {
+            LoginResponse::Html(html) => html.into_response(),
+            LoginResponse::Redirect(redirect) => redirect.into_response(),
+        }
+    }
+}
+
 pub async fn login(
     Form(form): Form<LoginBody>,
     Extension(state): Extension<Arc<State>>,
@@ -106,7 +120,7 @@ pub async fn login(
     let first_name = form.first_name;
     let password = form.password;
 
-    let mut user = fetch_user_by_first_name(&state.db, &first_name)
+    let user = fetch_user_by_first_name(&state.db, &first_name)
         .await
         .unwrap();
 
@@ -116,8 +130,8 @@ pub async fn login(
         let template = WrongPasswordTemplate {
             first_name: &first_name,
         };
-        Html(template.render().unwrap())
+        LoginResponse::Html(Html(template.render().unwrap()))
     } else {
-        Redirect::to("/game-zone").into_response()
+        LoginResponse::Redirect(Redirect::to("/game-zone"))
     }
 }

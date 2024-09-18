@@ -19,7 +19,7 @@ pub struct HomeTemplate<'a> {
 }
 
 #[derive(Template)]
-#[template(path = "loginfield.html")]
+#[template(path = "login-field.html")]
 pub struct LoginFieldTemplate<'a> {
     pub first_name: &'a str,
 }
