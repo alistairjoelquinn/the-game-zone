@@ -7,7 +7,10 @@ mod state;
 mod utils;
 
 use anyhow::{Context, Result};
-use axum::{routing::get, Extension, Router};
+use axum::{
+    routing::{get, post},
+    Extension, Router,
+};
 use middleware::log::LoggingLayer;
 use state::State;
 use std::sync::Arc;
@@ -35,6 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(handlers::home))
         .route("/user", get(handlers::get_user).post(handlers::post_user))
         .route("/login-field", get(handlers::login_field))
+        .route("/login", post(handlers::login))
         .route("/image", get(aws::s3::get_s3_object))
         .route(
             "/user/:id",

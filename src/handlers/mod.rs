@@ -1,8 +1,9 @@
 use askama::Template;
 use axum::{
-    extract::{Path, Query},
+    body::Body,
+    extract::{Form, Path, Query},
     response::{Html, IntoResponse, Redirect, Response},
-    Extension, Form, Json,
+    Extension, Json,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -94,44 +95,37 @@ pub async fn login_field(
     Html(template.render().unwrap())
 }
 
+#[derive(Deserialize)]
 pub struct LoginBody {
     pub first_name: String,
     pub password: String,
 }
 
-enum LoginResponse {
-    Html(Html<String>),
-    Redirect(Redirect),
-}
-
-impl IntoResponse for LoginResponse {
-    fn into_response(self) -> Response {
-        match self {
-            LoginResponse::Html(html) => html.into_response(),
-            LoginResponse::Redirect(redirect) => redirect.into_response(),
-        }
-    }
-}
-
 pub async fn login(
     Form(form): Form<LoginBody>,
     Extension(state): Extension<Arc<State>>,
-) -> impl IntoResponse {
+) -> Response<Body> {
     let first_name = form.first_name;
     let password = form.password;
 
-    let user = fetch_user_by_first_name(&state.db, &first_name)
-        .await
-        .unwrap();
-
-    let is_authenticated = user.password == password;
-
-    if !is_authenticated {
-        let template = WrongPasswordTemplate {
-            first_name: &first_name,
-        };
-        LoginResponse::Html(Html(template.render().unwrap()))
-    } else {
-        LoginResponse::Redirect(Redirect::to("/game-zone"))
+    match fetch_user_by_first_name(&state.db, &first_name).await {
+        Ok(user) => {
+            if user.password == password {
+                Redirect::to("/game-zone").into_response()
+            } else {
+                let template = WrongPasswordTemplate {
+                    first_name: &first_name,
+                };
+                Html(template.render().unwrap()).into_response()
+            }
+        }
+        Err(_) => {
+            // Handle the case where the user is not found
+            // For simplicity, we'll return the same template as wrong password
+            let template = WrongPasswordTemplate {
+                first_name: &first_name,
+            };
+            Html(template.render().unwrap()).into_response()
+        }
     }
 }
