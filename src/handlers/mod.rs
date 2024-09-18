@@ -1,6 +1,6 @@
 use askama::Template;
 use axum::{
-    extract::Path,
+    extract::{Path, Query},
     response::{Html, IntoResponse},
     Extension, Json,
 };
@@ -15,16 +15,6 @@ use crate::{
     model::{HomeTemplate, LoginFieldTemplate, User},
     state::State,
 };
-
-#[derive(Deserialize, Serialize)]
-pub struct UserId {
-    id: i32,
-}
-
-#[derive(Deserialize, Serialize)]
-pub struct Username {
-    name: String,
-}
 
 pub async fn get_user() -> &'static str {
     "GET /user"
@@ -58,6 +48,11 @@ pub async fn patch_user(
     Json(user)
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct UserId {
+    id: i32,
+}
+
 pub async fn delete_user(
     Path(UserId { id }): Path<UserId>,
     Extension(state): Extension<Arc<State>>,
@@ -85,10 +80,16 @@ pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
     Html(template.render().unwrap())
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct LoginFieldQuery {
+    user: String,
+}
+
 pub async fn login_field(
-    Path(Username { name }): Path<Username>,
+    Query(params): Query<LoginFieldQuery>,
 ) -> Html<String> {
-    println!("Name: {}", name);
+    println!("Name: {}", params.user);
+    let name = params.user;
     let template = LoginFieldTemplate { first_name: &name };
 
     Html(template.render().unwrap())
