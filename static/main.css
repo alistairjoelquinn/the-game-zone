@@ -677,6 +677,10 @@ video {
   padding-bottom: 8rem;
 }
 
+.text-center {
+  text-align: center;
+}
+
 .font-playpen {
   font-family: "Playpen Sans", cursive;
 }
@@ -692,6 +696,22 @@ video {
 
 .leading-10 {
   line-height: 2.5rem;
+}
+
+.leading-relaxed {
+  line-height: 1.625;
+}
+
+.leading-loose {
+  line-height: 2;
+}
+
+.leading-\[4rem\] {
+  line-height: 4rem;
+}
+
+.leading-\[5rem\] {
+  line-height: 5rem;
 }
 
 .text-gray-900 {
