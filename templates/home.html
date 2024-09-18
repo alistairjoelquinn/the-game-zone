@@ -15,7 +15,7 @@
     <!-- iterate over users -->
     {% for user in users %}
     <div
-      hx-get="/login-field?user={{ user.username }}" hx-trigger="click"
+      hx-get="/login-field?user={{ user.first_name }}" hx-trigger="click"
       hx-target="#container"
       hx-swap="innerHTML"
       class="group relative h-full w-1/2 overflow-hidden transition-all duration-500 hover:w-full hover:cursor-pointer"
