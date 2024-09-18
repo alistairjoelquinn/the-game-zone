@@ -17,3 +17,9 @@ pub struct HomeTemplate<'a> {
     pub title: &'a str,
     pub users: Vec<User>,
 }
+
+#[derive(Template)]
+#[template(path = "login_field.html")]
+pub struct LoginFieldTemplate<'a> {
+    pub first_name: &'a str,
+}

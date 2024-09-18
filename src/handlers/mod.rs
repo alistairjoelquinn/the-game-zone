@@ -12,13 +12,18 @@ use crate::{
         create_user, delete_user_by_id, fetch_all_users, fetch_user_by_id,
         update_user,
     },
-    model::{HomeTemplate, User},
+    model::{HomeTemplate, LoginFieldTemplate, User},
     state::State,
 };
 
 #[derive(Deserialize, Serialize)]
 pub struct UserId {
     id: i32,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct Username {
+    name: String,
 }
 
 pub async fn get_user() -> &'static str {
@@ -76,6 +81,15 @@ pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
         title: "Koen & Jonah's Game Zone",
         users,
     };
+
+    Html(template.render().unwrap())
+}
+
+pub async fn login_field(
+    Path(Username { name }): Path<Username>,
+) -> Html<String> {
+    println!("Name: {}", name);
+    let template = LoginFieldTemplate { first_name: &name };
 
     Html(template.render().unwrap())
 }
