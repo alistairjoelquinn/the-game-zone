@@ -1,8 +1,7 @@
 use askama::Template;
 use axum::{
-    body::Body,
     extract::{Form, Path, Query},
-    response::{Html, IntoResponse, Redirect, Response},
+    response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
 use serde::{Deserialize, Serialize};
