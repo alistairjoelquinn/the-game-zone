@@ -6,7 +6,7 @@ mod model;
 mod state;
 mod utils;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use axum::{
     routing::{get, post},
     Extension, Router,
@@ -29,9 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let cors = utils::initialise_cors();
     let db = database::initialise_database().await?;
-    let s3 = aws::s3::init_s3()
-        .await
-        .context("Failed to initialize S3 client")?;
+    let s3 = aws::s3::init_s3().await?;
     let state = Arc::new(State { db, s3 });
 
     let app = Router::new()
@@ -45,14 +43,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .layer(cors)
         .layer(Extension(state));
 
-    let listener = TcpListener::bind("127.0.0.1:3333")
-        .await
-        .context("Failed to bind to port 3333")?;
-    println!("Starting server on port 3333");
-
-    axum::serve(listener, app)
-        .await
-        .context("Error starting server")?;
-
+    let listener = TcpListener::bind("127.0.0.1:3333").await?;
+    axum::serve(listener, app).await?;
     Ok(())
 }
