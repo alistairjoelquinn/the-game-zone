@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use crate::state::State;
 use anyhow::{Context, Result};
 use aws_config::default_provider::credentials::DefaultCredentialsChain;
@@ -11,6 +9,7 @@ use axum::http::{header, StatusCode};
 use axum::response::{IntoResponse, Response};
 use axum::Extension;
 use serde::Deserialize;
+use std::sync::Arc;
 use tracing::{error, info, warn};
 
 #[derive(Debug)]
