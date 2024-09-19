@@ -14,7 +14,5 @@ pub async fn initialise_database(
         .connect(&database_url)
         .await?;
 
-    println!("Connected to database");
     Ok(db)
 }
-
