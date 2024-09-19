@@ -80,32 +80,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "askama-blog"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "askama",
- "askama_axum",
- "aws-config",
- "aws-sdk-s3",
- "aws-types",
- "axum",
- "axum-macros",
- "chrono",
- "dotenv",
- "hyper 0.14.30",
- "serde",
- "serde_json",
- "sqlx",
- "tokio",
- "tokio-postgres",
- "tower",
- "tower-http",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "askama_axum"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2655,6 +2629,32 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "the-game-zone"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "askama",
+ "askama_axum",
+ "aws-config",
+ "aws-sdk-s3",
+ "aws-types",
+ "axum",
+ "axum-macros",
+ "chrono",
+ "dotenv",
+ "hyper 0.14.30",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tokio-postgres",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

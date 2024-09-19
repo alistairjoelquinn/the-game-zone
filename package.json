@@ -4,8 +4,8 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run tailwind\"",
     "server": "RUST_LOG=debug cargo watch -x run",
-    "tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --watch",
-    "build-tailwind": "npx tailwindcss -i ./templates/main.css -o ./static/main.css --minify",
+    "tailwind": "npx tailwindcss -i ./templates/styles/main.css -o ./static/main.css --watch",
+    "build-tailwind": "npx tailwindcss -i ./templates/styles/main.css -o ./static/main.css --minify",
     "build": "npm run build-tailwind && cargo build --release",
     "reset-db": "psql -d game_zone -f src/database/database.sql"
   },
