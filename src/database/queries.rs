@@ -30,7 +30,7 @@ pub async fn fetch_user_by_first_name(
     pool: &PgPool,
     first_name: &String,
 ) -> Result<User, sqlx::Error> {
-    sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = $1")
+    sqlx::query_as::<_, User>("SELECT * FROM users WHERE first_name = $1")
         .bind(first_name)
         .fetch_one(pool)
         .await

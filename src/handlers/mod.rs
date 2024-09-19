@@ -4,6 +4,7 @@ use axum::{
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
+use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -94,16 +95,18 @@ pub async fn login_field(
     Html(template.render().unwrap())
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct LoginBody {
     pub first_name: String,
     pub password: String,
 }
 
+#[debug_handler]
 pub async fn login(
-    Form(form): Form<LoginBody>,
     Extension(state): Extension<Arc<State>>,
+    Form(form): Form<LoginBody>,
 ) -> impl IntoResponse {
+    println!("Form: {:?}", form);
     let first_name = form.first_name;
     let password = form.password;
 
