@@ -36,16 +36,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(handlers::home))
-        .route("/user", get(handlers::get_user).post(handlers::post_user))
         .route("/login-field", get(handlers::login_field))
         .route("/login", post(handlers::login))
         .route("/image", get(aws::s3::get_s3_object))
-        .route(
-            "/user/:id",
-            get(handlers::get_user_by_id)
-                .patch(handlers::patch_user)
-                .delete(handlers::delete_user),
-        )
         .route("/users", get(handlers::get_users))
         .nest_service("/static", ServeDir::new("static"))
         .layer(LoggingLayer)
