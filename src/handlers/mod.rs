@@ -9,7 +9,10 @@ use std::sync::Arc;
 
 use crate::{
     database::queries,
-    model::{HomeTemplate, LoginFieldTemplate, User, WrongPasswordTemplate},
+    model::{
+        GameZoneTemplate, HomeTemplate, LoginFieldTemplate, User,
+        WrongPasswordTemplate,
+    },
     state::State,
 };
 
@@ -62,7 +65,8 @@ pub async fn login(
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
             if user.password == password {
-                Redirect::to("/game-zone").into_response()
+                Redirect::to(&format!("/game-zone?user={}", &first_name))
+                    .into_response()
             } else {
                 let template = WrongPasswordTemplate {
                     first_name: &first_name,
@@ -77,4 +81,16 @@ pub async fn login(
             Html(template.render().unwrap()).into_response()
         }
     }
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct GameZoneQuery {
+    user: String,
+}
+
+pub async fn game_zone(Query(params): Query<GameZoneQuery>) -> Html<String> {
+    let name = params.user;
+    let template = GameZoneTemplate { first_name: &name };
+
+    Html(template.render().unwrap())
 }
