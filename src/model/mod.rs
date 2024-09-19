@@ -13,8 +13,7 @@ pub struct User {
 
 #[derive(Template)]
 #[template(path = "home.html")]
-pub struct HomeTemplate<'a> {
-    pub title: &'a str,
+pub struct HomeTemplate {
     pub users: Vec<User>,
 }
 
@@ -31,7 +30,7 @@ pub struct WrongPasswordTemplate<'a> {
 }
 
 #[derive(Template)]
-#[template(path = "game-zone.html")]
+#[template(path = "main.html")]
 pub struct GameZoneTemplate<'a> {
     pub first_name: &'a str,
 }

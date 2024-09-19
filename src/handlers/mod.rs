@@ -27,10 +27,7 @@ pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
     let mut users = queries::fetch_all_users(&state.db).await.unwrap();
     users.reverse();
 
-    let template = HomeTemplate {
-        title: "Koen & Jonah's Game Zone",
-        users,
-    };
+    let template = HomeTemplate { users };
 
     Html(template.render().unwrap())
 }
