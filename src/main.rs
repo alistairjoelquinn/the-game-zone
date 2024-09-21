@@ -11,7 +11,7 @@ use axum::{
     routing::{get, post},
     Extension, Router,
 };
-use middleware::log::LoggingLayer;
+use middleware::log::log_incoming_request;
 use state::State;
 use std::sync::Arc;
 use tokio::net::TcpListener;
@@ -43,7 +43,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()
-                .layer(LoggingLayer)
+                .layer(axum::middleware::from_fn(log_incoming_request))
                 .layer(cors)
                 .layer(Extension(state)),
         );
