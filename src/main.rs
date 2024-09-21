@@ -15,6 +15,7 @@ use middleware::log::LoggingLayer;
 use state::State;
 use std::sync::Arc;
 use tokio::net::TcpListener;
+use tower::ServiceBuilder;
 use tower_http::services::ServeDir;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -40,9 +41,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/users", get(handlers::get_users))
         .route("/game-zone", get(handlers::game_zone))
         .nest_service("/static", ServeDir::new("static"))
-        .layer(LoggingLayer)
-        .layer(cors)
-        .layer(Extension(state));
+        .layer(
+            ServiceBuilder::new()
+                .layer(LoggingLayer)
+                .layer(cors)
+                .layer(Extension(state)),
+        );
 
     let listener = TcpListener::bind("127.0.0.1:3333").await?;
     axum::serve(listener, app).await?;
