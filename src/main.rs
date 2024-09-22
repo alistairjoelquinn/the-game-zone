@@ -6,15 +6,19 @@ mod model;
 mod state;
 mod utils;
 
+use crate::utils::handle_timeout_error;
 use anyhow::Result;
 use axum::{
+    error_handling::HandleErrorLayer,
     routing::{get, post},
     Extension, Router,
 };
 use middleware::log::log_incoming_request;
 use state::State;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::net::TcpListener;
+use tower::timeout::TimeoutLayer;
 use tower::ServiceBuilder;
 use tower_http::services::ServeDir;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -43,6 +47,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()
+                .layer(HandleErrorLayer::new(handle_timeout_error))
+                .layer(TimeoutLayer::new(Duration::from_secs(30)))
                 .layer(axum::middleware::from_fn(log_incoming_request))
                 .layer(cors)
                 .layer(Extension(state)),
