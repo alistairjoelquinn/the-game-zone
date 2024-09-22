@@ -39,25 +39,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(handlers::home))
-        .route(
-            "/test1",
-            get(|| async {
-                println!("Test route 1");
-                "Hello, World!"
-            }),
-        )
         .route("/login-field", get(handlers::login_field))
         .route("/login", post(handlers::login))
         .route("/image", get(aws::s3::get_s3_object))
         .route("/users", get(handlers::get_users))
         .route("/game-zone", get(handlers::game_zone))
-        .route(
-            "/test2",
-            get(|| async {
-                println!("Test route 2");
-                "Hello, World!"
-            }),
-        )
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()
