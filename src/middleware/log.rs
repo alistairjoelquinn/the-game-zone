@@ -8,7 +8,9 @@ pub async fn log_incoming_request(request: Request, next: Next) -> Response {
         request.method(),
         request.uri(),
     );
+    println!("log middlware 1");
 
     let response = next.run(request).await;
+    println!("log middlware 2");
     response
 }
