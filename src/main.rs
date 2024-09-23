@@ -55,6 +55,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
 
     let listener = TcpListener::bind("127.0.0.1:3333").await?;
-    axum::serve(listener, app).await?;
+
+    if let Err(err) = axum::serve(listener, app).await {
+        tracing::error!("Error detected by axum::serve : {:?}", err);
+    }
+
     Ok(())
 }
