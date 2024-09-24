@@ -1,11 +1,11 @@
 use askama::Template;
-use axum::headers::{Authorization, Bearer};
-use axum::TypedHeader;
 use axum::{
     extract::{Form, Query},
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
+use axum_extra::headers::{Authorization, Bearer};
+use axum_extra::TypedHeader;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -87,9 +87,9 @@ pub struct GameZoneQuery {
     user: String,
 }
 
-pub async fn game_zone(
+pub async fn game_zone€ý,(
     Query(params): Query<GameZoneQuery>,
-    auth: TypedHeader<Authorization<Bearer>>,
+    TypedHeader(auth): TypedHeader<Authorization>,
 ) -> Html<String> {
     let name = params.user;
     let template = GameZoneTemplate { first_name: &name };
