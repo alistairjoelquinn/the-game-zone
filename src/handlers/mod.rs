@@ -5,6 +5,7 @@ use crate::{
         WrongPasswordTemplate,
     },
     state::State,
+    utils::jwt::is_valid_token,
 };
 use askama::Template;
 use axum::{
@@ -12,8 +13,8 @@ use axum::{
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
-use axum_extra::headers::Authorization;
 use axum_extra::TypedHeader;
+use headers::{authorization::Bearer, Authorization};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
@@ -88,7 +89,7 @@ pub struct GameZoneQuery {
 
 pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
-    TypedHeader(auth): TypedHeader<Authorization>,
+    TypedHeader(auth): TypedHeader<Authorization<Bearer>>,
 ) -> impl IntoResponse {
     let token = auth.token();
     println!("Token: {}", token);
