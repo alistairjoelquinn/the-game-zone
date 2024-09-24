@@ -1,3 +1,5 @@
+mod jwt;
+
 use axum::http::{
     header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
     HeaderValue, Method, StatusCode,

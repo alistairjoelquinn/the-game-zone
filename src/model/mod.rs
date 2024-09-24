@@ -30,7 +30,7 @@ pub struct WrongPasswordTemplate<'a> {
 }
 
 #[derive(Template)]
-#[template(path = "main.html")]
+#[template(path = "game-zone.html")]
 pub struct GameZoneTemplate<'a> {
     pub first_name: &'a str,
 }
