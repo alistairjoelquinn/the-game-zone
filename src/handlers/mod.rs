@@ -1,4 +1,6 @@
 use askama::Template;
+use axum::headers::{Authorization, Bearer};
+use axum::TypedHeader;
 use axum::{
     extract::{Form, Query},
     response::{Html, IntoResponse, Redirect},
@@ -85,7 +87,10 @@ pub struct GameZoneQuery {
     user: String,
 }
 
-pub async fn game_zone(Query(params): Query<GameZoneQuery>) -> Html<String> {
+pub async fn game_zone(
+    Query(params): Query<GameZoneQuery>,
+    auth: TypedHeader<Authorization<Bearer>>,
+) -> Html<String> {
     let name = params.user;
     let template = GameZoneTemplate { first_name: &name };
 
