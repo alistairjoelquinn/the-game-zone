@@ -7,8 +7,7 @@ struct Claims {
     exp: usize,
 }
 
-pub fn is_valid_token(token: &str) -> bool {
-    let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+pub fn is_valid_token(token: &str, secret: &str) -> bool {
     let key = DecodingKey::from_secret(secret.as_bytes());
 
     match decode::<Claims>(token, &key, &Validation::default()) {

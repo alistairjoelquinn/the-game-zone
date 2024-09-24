@@ -89,12 +89,13 @@ pub struct GameZoneQuery {
 
 pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
+    Extension(state): Extension<Arc<State>>,
     TypedHeader(auth): TypedHeader<Authorization<Bearer>>,
 ) -> impl IntoResponse {
     let token = auth.token();
     println!("Token: {}", token);
 
-    if !is_valid_token(token) {
+    if !is_valid_token(token, &state.jwt_secret) {
         Redirect::to(&format!("/404")).into_response()
     } else {
         let name = params.user;
