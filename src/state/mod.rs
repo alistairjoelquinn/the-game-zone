@@ -5,4 +5,5 @@ use std::sync::Arc;
 pub struct State {
     pub db: sqlx::PgPool,
     pub s3: Arc<S3Client>,
+    pub jwt_secret: String,
 }

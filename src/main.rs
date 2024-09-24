@@ -35,7 +35,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cors = utils::initialise_cors();
     let db = database::initialise_database().await?;
     let s3 = aws::s3::init_s3().await?;
-    let state = Arc::new(State { db, s3 });
+    let jwt_secret =
+        std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+    let state = Arc::new(State { db, s3, jwt_secret });
 
     let app = Router::new()
         .route("/", get(handlers::home))
