@@ -5,7 +5,7 @@ use crate::{
         WrongPasswordTemplate,
     },
     state::State,
-    utils::jwt::is_valid_token,
+    utils::auth::is_valid_token,
 };
 use askama::Template;
 use axum::{
