@@ -47,8 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/users", get(handlers::get_users))
         .route(
             "/game-zone",
-            get(handlers::game_zone)
-                .layer(middleware::from_fn(auth::authorize)),
+            get(handlers::game_zone), //  .layer(middleware::from_fn(auth::authorize)),
         )
         .nest_service("/static", ServeDir::new("static"))
         .layer(

@@ -28,10 +28,10 @@ pub fn is_valid_token(token: &str, secret: &str) -> bool {
     }
 }
 
-pub async fn auth(request: Request, next: Next) -> Response {
-    let response = next.run(request).await;
-    response
-}
+//pub async fn auth(request: Request, next: Next) -> Response {
+//    let response = next.run(request).await;
+//    response
+// }
 
 pub fn encode_jwt(
     username: String,
