@@ -1,4 +1,4 @@
-pub mod jwt;
+pub mod auth;
 
 use axum::http::{
     header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},

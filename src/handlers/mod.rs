@@ -64,6 +64,9 @@ pub async fn login(
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
             if user.password == password {
+                let token = encode_jwt(user.email)?;
+
+                Ok(Json(token));
                 Redirect::to(&format!("/game-zone?user={}", &first_name))
                     .into_response()
             } else {
