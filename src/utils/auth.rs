@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 pub struct Claims {
     pub exp: usize,
     pub iat: usize,
-    pub email: String,
+    pub username: String,
 }
 
 pub fn is_valid_token(token: &str, secret: &str) -> bool {
@@ -33,12 +33,15 @@ pub async fn auth(request: Request, next: Next) -> Response {
     response
 }
 
-pub fn encode_jwt(email: String, secret: &str) -> Result<String, StatusCode> {
+pub fn encode_jwt(
+    username: String,
+    secret: &str,
+) -> Result<String, StatusCode> {
     let now = Utc::now();
     let expire: chrono::TimeDelta = Duration::days(14);
     let exp: usize = (now + expire).timestamp() as usize;
     let iat: usize = now.timestamp() as usize;
-    let claim = Claims { iat, exp, email };
+    let claim = Claims { iat, exp, username };
 
     encode(
         &Header::default(),
