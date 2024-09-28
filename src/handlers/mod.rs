@@ -82,6 +82,10 @@ pub async fn login(
     }
 }
 
+pub async fn logout() -> Redirect {
+    Redirect::to("/")
+}
+
 #[derive(Deserialize, Serialize)]
 pub struct GameZoneQuery {
     user: String,
@@ -96,7 +100,7 @@ pub async fn game_zone(
     println!("Token: {}", token);
 
     if !is_valid_token(token, &state.jwt_secret) {
-        Redirect::to(&format!("/404")).into_response()
+        Redirect::to("/404").into_response()
     } else {
         let name = params.user;
         let template = GameZoneTemplate { first_name: &name };
