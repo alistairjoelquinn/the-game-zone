@@ -1,10 +1,19 @@
-use jsonwebtoken::{decode, DecodingKey, Validation};
+use axum::{
+    extract::Request,
+    http::{Response, StatusCode},
+    middleware::Next,
+};
+use chrono::{Duration, Utc};
+use jsonwebtoken::{
+    decode, encode, DecodingKey, EncodingKey, Header, Validation,
+};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Claims {
-    sub: String,
-    exp: usize,
+#[derive(Serialize, Deserialize)]
+pub struct Claims {
+    pub exp: usize,
+    pub iat: usize,
+    pub email: String,
 }
 
 pub fn is_valid_token(token: &str, secret: &str) -> bool {
