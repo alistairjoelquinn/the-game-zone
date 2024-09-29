@@ -3,13 +3,15 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{GameZoneTemplate, HomeTemplate, WrongPasswordTemplate},
+    model::{
+        GameZoneTemplate, HomeTemplate, LayoutTemplate, WrongPasswordTemplate,
+    },
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
 use askama::Template;
 use axum::{
-    extract::{Form, Query},
+    extract::Form,
     http::{header, Response, StatusCode},
     response::{Html, IntoResponse, Redirect},
     Extension,
@@ -17,7 +19,7 @@ use axum::{
 use axum_extra::{headers, TypedHeader};
 use cookie::Cookie;
 use jsonwebtoken::{decode, DecodingKey, Validation};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::sync::Arc;
 use time::Duration;
 use tracing::info;
@@ -36,11 +38,20 @@ pub async fn home(
         ) {
             Ok(token_data) => {
                 println!("Token data: {:?}", token_data);
-                let template = GameZoneTemplate {
-                    first_name: "johner",
+
+                let username = token_data.claims.username;
+
+                let game_zone_template = GameZoneTemplate {
+                    first_name: &username,
                 };
 
-                Html(template.render().unwrap()).into_response()
+                let game_zone_html = game_zone_template.render().unwrap();
+
+                let layout_template = LayoutTemplate {
+                    content: game_zone_html,
+                };
+
+                Html(layout_template.render().unwrap()).into_response()
             }
             Err(_) => {
                 // Invalid JWT, redirect to login
