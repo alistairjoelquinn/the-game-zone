@@ -1,15 +1,11 @@
-use axum::{
-    extract::Request,
-    http::{Response, StatusCode},
-    middleware::Next,
-};
+use axum::http::StatusCode;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{
     decode, encode, DecodingKey, EncodingKey, Header, Validation,
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Claims {
     pub exp: usize,
     pub iat: usize,

@@ -1,17 +1,21 @@
 use crate::{
     database::queries,
-    model::{HomeTemplate, LoginFieldTemplate, User, WrongPasswordTemplate},
+    model::{
+        GameZoneTemplate, HomeTemplate, LoginFieldTemplate, User,
+        WrongPasswordTemplate,
+    },
     state::State,
-    utils::auth::{encode_jwt, is_valid_token},
+    utils::auth::{encode_jwt, Claims},
 };
 use askama::Template;
 use axum::{
     extract::{Form, Query},
-    http::{header, HeaderMap, Response, StatusCode},
+    http::{header, Response, StatusCode},
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
-use cookie::Cookie;
+use cookie::{Cookie, CookieJar};
+use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use time::Duration;
@@ -24,13 +28,37 @@ pub async fn get_users(
     Json(users)
 }
 
-pub async fn home(Extension(state): Extension<Arc<State>>) -> Html<String> {
-    let mut users = queries::fetch_all_users(&state.db).await.unwrap();
-    users.reverse();
+pub async fn home(
+    Extension(state): Extension<Arc<State>>,
+) -> impl IntoResponse {
+    let jar = CookieJar::new();
+    if let Some(auth_token) = jar.get("auth_token").map(|c| c.value()) {
+        match decode::<Claims>(
+            auth_token,
+            &DecodingKey::from_secret(state.jwt_secret.as_ref()),
+            &Validation::default(),
+        ) {
+            Ok(token_data) => {
+                println!("Token data: {:?}", token_data);
+                let template = GameZoneTemplate {
+                    first_name: "johner",
+                };
 
-    let template = HomeTemplate { users };
+                Html(template.render().unwrap()).into_response()
+            }
+            Err(_) => {
+                // Invalid JWT, redirect to login
+                Redirect::to("/login").into_response()
+            }
+        }
+    } else {
+        let mut users = queries::fetch_all_users(&state.db).await.unwrap();
+        users.reverse();
 
-    Html(template.render().unwrap())
+        let template = HomeTemplate { users };
+
+        Html(template.render().unwrap()).into_response()
+    }
 }
 
 #[derive(Deserialize, Serialize)]
@@ -114,20 +142,10 @@ pub struct GameZoneQuery {
 
 pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
-    Extension(state): Extension<Arc<State>>,
-    // TypedHeader(auth): TypedHeader<Authorization<Bearer>>,
 ) -> impl IntoResponse {
-    // let token = auth.token();
-    ////   println!("Token: {}", token);
+    let template = GameZoneTemplate {
+        first_name: &params.user,
+    };
 
-    println!("{:#?} {:#?}", params, state);
-
-    //if !is_valid_token(token, &state.jwt_secret) {
-    //    Redirect::to("/404").into_response()
-    // } else {
-    //    let name = params.user;
-    //    let template = GameZoneTemplate { first_name: &name };
-
-    // Html(template.render().unwrap()).into_response()
-    // }
+    Html(template.render().unwrap()).into_response()
 }
