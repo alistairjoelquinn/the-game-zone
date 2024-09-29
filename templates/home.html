@@ -40,12 +40,8 @@
 
 <!-- script for ensuring images fade in after loading -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", () => {
     const images = document.querySelectorAll("img");
-    images.forEach((img) => {
-      if (img.complete) {
-        img.classList.add("opacity-100");
-      }
-    });
+    images.forEach((img) => img.complete && img.classList.add("opacity-100"));
   });
 </script>
