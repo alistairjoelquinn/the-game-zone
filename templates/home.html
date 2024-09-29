@@ -2,38 +2,25 @@
 
 <!-- component content -->
 {% block content %}
-<div class="flex h-full w-full flex-col items-center justify-evenly gap-16">
-  <h2
-    class="relative z-20 text-center font-playpen text-[80px] leading-[5rem] text-gray-900"
+<!-- iterate over users -->
+{% for user in users %}
+<div
+  hx-get="/login-field?user={{ user.first_name }}"
+  hx-trigger="click"
+  hx-target="#container"
+  hx-swap="innerHTML"
+  class="group relative h-full w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:w-full hover:cursor-pointer"
+>
+  <img
+    id="user-image-{{user.username}}"
+    src="/image?name={{user.username}}"
+    alt="{{ user.first_name }}"
+    class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+  />
+  <h3
+    class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 animate-fade-in font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
   >
-    The Game Zone
-  </h2>
-  <div
-    id="container"
-    class="relative z-10 flex w-full max-w-4xl flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
-  >
-    <!-- iterate over users -->
-    {% for user in users %}
-    <div
-      hx-get="/login-field?user={{ user.first_name }}"
-      hx-trigger="click"
-      hx-target="#container"
-      hx-swap="innerHTML"
-      class="group relative h-full w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:w-full hover:cursor-pointer"
-    >
-      <img
-        id="user-image-{{user.username}}"
-        src="/image?name={{user.username}}"
-        alt="{{ user.first_name }}"
-        class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
-      />
-      <h3
-        class="text-shadow animate-fade-in absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
-      >
-        {{ user.first_name }}
-      </h3>
-    </div>
-    {% endfor %}
-  </div>
+    {{ user.first_name }}
+  </h3>
 </div>
-{% endblock %}
+{% endfor %} {% endblock %}

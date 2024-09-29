@@ -12,7 +12,19 @@
     />
   </head>
   <body class="h-screen bg-[url('/static/background.jpg')] p-24">
-    {% block content %} {% endblock %}
+    <div class="flex h-full w-full flex-col items-center justify-evenly gap-16">
+      <h2
+        class="relative z-20 text-center font-playpen text-[80px] leading-[5rem] text-gray-900"
+      >
+        The Game Zone
+      </h2>
+      <div
+        id="container"
+        class="relative z-10 flex w-full max-w-4xl flex-1 overflow-hidden rounded-[45px] border-[14px] border-blue-500 bg-white"
+      >
+        {% block content %} {% endblock %}
+      </div>
+    </div>
     <!-- script for ensuring images fade in after loading -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
