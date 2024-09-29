@@ -13,15 +13,12 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const images = document.querySelectorAll("img");
-
         images.forEach((img) => {
-          const fadeInImage = () => {
-            // Small delay to ensure the image is rendered
+          function fadeInImage() {
             setTimeout(() => {
               img.classList.add("opacity-100");
             }, 50);
-          };
-
+          }
           if (img.complete) {
             fadeInImage();
           } else {
