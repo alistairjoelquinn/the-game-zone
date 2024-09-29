@@ -36,9 +36,7 @@ pub async fn home(
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
     println!("Cookies: {:?}", cookies);
-    let jar = CookieJar::new();
-    println!("Cookies: {:?}", jar);
-    if let Some(auth_token) = jar.get("auth_token").map(|c| c.value()) {
+    if let Some(auth_token) = cookies.get("auth_token") {
         println!("Auth token: {}", auth_token);
         match decode::<Claims>(
             auth_token,
