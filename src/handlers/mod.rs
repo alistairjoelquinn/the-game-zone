@@ -1,11 +1,8 @@
 use crate::{
     database::queries,
-    model::{
-        GameZoneTemplate, HomeTemplate, LoginFieldTemplate, User,
-        WrongPasswordTemplate,
-    },
+    model::{HomeTemplate, LoginFieldTemplate, User, WrongPasswordTemplate},
     state::State,
-    utils::auth::is_valid_token,
+    //  utils::auth::is_valid_token,
 };
 use askama::Template;
 use axum::{
@@ -13,8 +10,8 @@ use axum::{
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
-use axum_extra::TypedHeader;
-use headers::{authorization::Bearer, Authorization};
+// use axum_extra::TypedHeader;
+// use headers::{authorization::Bearer, Authorization};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tracing::info;
@@ -69,7 +66,9 @@ pub async fn login(
 
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
+            println!("evreything is ok");
             if user.password == password {
+                println!("password is ok");
                 // let token = encode_jwt(user.username)?;
 
                 // Ok(Json(token));
@@ -95,7 +94,7 @@ pub async fn logout() -> Redirect {
     Redirect::to("/")
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct GameZoneQuery {
     user: String,
 }
@@ -103,17 +102,19 @@ pub struct GameZoneQuery {
 pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
     Extension(state): Extension<Arc<State>>,
-    TypedHeader(auth): TypedHeader<Authorization<Bearer>>,
+    // TypedHeader(auth): TypedHeader<Authorization<Bearer>>,
 ) -> impl IntoResponse {
-    let token = auth.token();
-    println!("Token: {}", token);
+    // let token = auth.token();
+    ////   println!("Token: {}", token);
 
-    if !is_valid_token(token, &state.jwt_secret) {
-        Redirect::to("/404").into_response()
-    } else {
-        let name = params.user;
-        let template = GameZoneTemplate { first_name: &name };
+    println!("{:#?} {:#?}", params, state);
 
-        Html(template.render().unwrap()).into_response()
-    }
+    //if !is_valid_token(token, &state.jwt_secret) {
+    //    Redirect::to("/404").into_response()
+    // } else {
+    //    let name = params.user;
+    //    let template = GameZoneTemplate { first_name: &name };
+
+    // Html(template.render().unwrap()).into_response()
+    // }
 }
