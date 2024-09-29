@@ -6,6 +6,8 @@ mod model;
 mod state;
 mod utils;
 
+use crate::handlers::api;
+use crate::handlers::components;
 use crate::utils::handle_timeout_error;
 use anyhow::Result;
 use axum::{
@@ -32,7 +34,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(handlers::home))
-        .route("/login-field", get(handlers::login_field))
         .route("/login", post(handlers::login))
         .route("/logout", get(handlers::logout))
         .route("/image", get(aws::s3::get_s3_object))
@@ -41,6 +42,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "/game-zone",
             get(handlers::game_zone), //  .layer(middleware::from_fn(auth::authorize)),
         )
+        .nest("/components", components::init())
+        .nest("/api", api())
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()

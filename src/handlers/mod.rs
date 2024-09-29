@@ -1,3 +1,6 @@
+pub mod api;
+pub mod components;
+
 use crate::{
     database::queries,
     model::{
@@ -16,7 +19,7 @@ use axum::{
 };
 use axum_extra::{headers, TypedHeader};
 use axum_macros::debug_handler;
-use cookie::{Cookie, CookieJar};
+use cookie::Cookie;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -65,20 +68,6 @@ pub async fn home(
 
         Html(template.render().unwrap()).into_response()
     }
-}
-
-#[derive(Deserialize, Serialize)]
-pub struct LoginFieldQuery {
-    user: String,
-}
-
-pub async fn login_field(
-    Query(params): Query<LoginFieldQuery>,
-) -> Html<String> {
-    let name = params.user;
-    let template = LoginFieldTemplate { first_name: &name };
-
-    Html(template.render().unwrap())
 }
 
 #[derive(Deserialize, Debug)]
