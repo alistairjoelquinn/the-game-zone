@@ -37,3 +37,15 @@
   </div>
 </div>
 {% endblock %}
+
+<!-- script for ensuring images fade in after loading -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll("img");
+    images.forEach((img) => {
+      if (img.complete) {
+        img.classList.add("opacity-100");
+      }
+    });
+  });
+</script>
