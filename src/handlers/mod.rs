@@ -7,7 +7,7 @@ use crate::{
 use askama::Template;
 use axum::{
     extract::{Form, Query},
-    http::{header, HeaderMap, StatusCode},
+    http::{header, HeaderMap, Response, StatusCode},
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
@@ -67,25 +67,25 @@ pub async fn login(
 
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
-            println!("evreything is ok");
             if user.password == password {
-                println!("password is ok");
                 let jwt = encode_jwt(user.username, &state.jwt_secret)
                     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
                     .unwrap_or_else(|_| "".to_string());
 
-                let mut headers = HeaderMap::new();
                 let cookie = Cookie::build(("auth_token", jwt))
                     .path("/")
                     .max_age(Duration::days(14))
                     .http_only(true);
 
-                headers.insert(
-                    header::SET_COOKIE,
-                    cookie.to_string().parse().unwrap(),
-                );
-
-                Redirect::to(&format!("/game-zone?user={}", &first_name))
+                Response::builder()
+                    .status(StatusCode::FOUND)
+                    .header(
+                        header::LOCATION,
+                        format!("/game-zone?user={}", &first_name),
+                    )
+                    .header(header::SET_COOKIE, cookie.to_string())
+                    .body(axum::body::Body::empty())
+                    .unwrap()
                     .into_response()
             } else {
                 let template = WrongPasswordTemplate {
