@@ -17,6 +17,7 @@ use axum_extra::TypedHeader;
 use headers::{authorization::Bearer, Authorization};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use tracing::info;
 
 pub async fn get_users(
     Extension(state): Extension<Arc<State>>,
@@ -60,6 +61,11 @@ pub async fn login(
 ) -> impl IntoResponse {
     let first_name = form.first_name;
     let password = form.password;
+
+    info!(
+        "Login attempt - First Name: {}, Password: {}",
+        first_name, password
+    );
 
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
