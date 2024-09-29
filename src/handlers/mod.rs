@@ -14,6 +14,8 @@ use axum::{
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
+use axum_extra::{headers, TypedHeader};
+use axum_macros::debug_handler;
 use cookie::{Cookie, CookieJar};
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
@@ -28,11 +30,16 @@ pub async fn get_users(
     Json(users)
 }
 
+#[debug_handler]
 pub async fn home(
+    cookies: TypedHeader<headers::Cookie>,
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
+    println!("Cookies: {:?}", cookies);
     let jar = CookieJar::new();
+    println!("Cookies: {:?}", jar);
     if let Some(auth_token) = jar.get("auth_token").map(|c| c.value()) {
+        println!("Auth token: {}", auth_token);
         match decode::<Claims>(
             auth_token,
             &DecodingKey::from_secret(state.jwt_secret.as_ref()),
@@ -52,6 +59,7 @@ pub async fn home(
             }
         }
     } else {
+        println!("No auth token found");
         let mut users = queries::fetch_all_users(&state.db).await.unwrap();
         users.reverse();
 

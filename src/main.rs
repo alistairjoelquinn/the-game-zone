@@ -21,17 +21,9 @@ use tokio::net::TcpListener;
 use tower::timeout::TimeoutLayer;
 use tower::ServiceBuilder;
 use tower_http::services::ServeDir;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new(std::env::var(
-            "RUST_LOG",
-        )?))
-        .with(tracing_subscriber::fmt::layer())
-        .init();
-
     let cors = utils::initialise_cors();
     let db = database::initialise_database().await?;
     let s3 = aws::s3::init_s3().await?;
