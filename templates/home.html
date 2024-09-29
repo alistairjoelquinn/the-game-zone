@@ -1,5 +1,13 @@
 {% extends "layouts/main.html" %}
 
+<!-- script for ensuring images fade in after loading -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const images = document.querySelectorAll("img");
+    images.forEach((img) => img.complete && img.classList.add("opacity-100"));
+  });
+</script>
+
 <!-- component content -->
 {% block content %}
 <div class="flex h-full w-full flex-col items-center justify-evenly gap-16">
@@ -19,13 +27,13 @@
       hx-trigger="click"
       hx-target="#container"
       hx-swap="innerHTML"
-      class="group relative h-full w-1/2 overflow-hidden transition-all duration-500 hover:w-full hover:cursor-pointer"
+      class="group relative h-full w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:w-full hover:cursor-pointer"
     >
       <img
         id="user-image-{{user.username}}"
         src="/image?name={{user.username}}"
         alt="{{ user.first_name }}"
-        class="absolute inset-0 h-full w-full object-cover"
+        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-in-out"
       />
       <h3
         class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
@@ -37,11 +45,3 @@
   </div>
 </div>
 {% endblock %}
-
-<!-- script for ensuring images fade in after loading -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const images = document.querySelectorAll("img");
-    images.forEach((img) => img.complete && img.classList.add("opacity-100"));
-  });
-</script>
