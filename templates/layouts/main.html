@@ -9,5 +9,26 @@
   </head>
   <body class="h-screen bg-[url('/static/background.jpg')] p-24">
     {% block content %} {% endblock %}
+    <!-- script for ensuring images fade in after loading -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const images = document.querySelectorAll("img");
+
+        images.forEach((img) => {
+          const fadeInImage = () => {
+            // Small delay to ensure the image is rendered
+            setTimeout(() => {
+              img.classList.add("opacity-100");
+            }, 50);
+          };
+
+          if (img.complete) {
+            fadeInImage();
+          } else {
+            img.addEventListener("load", fadeInImage);
+          }
+        });
+      });
+    </script>
   </body>
 </html>
