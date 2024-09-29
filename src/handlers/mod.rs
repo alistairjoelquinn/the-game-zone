@@ -2,18 +2,19 @@ use crate::{
     database::queries,
     model::{HomeTemplate, LoginFieldTemplate, User, WrongPasswordTemplate},
     state::State,
-    //  utils::auth::is_valid_token,
+    utils::auth::{encode_jwt, is_valid_token},
 };
 use askama::Template;
 use axum::{
     extract::{Form, Query},
+    http::{header, HeaderMap, StatusCode},
     response::{Html, IntoResponse, Redirect},
     Extension, Json,
 };
-// use axum_extra::TypedHeader;
-// use headers::{authorization::Bearer, Authorization};
+use cookie::Cookie;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use time::Duration;
 use tracing::info;
 
 pub async fn get_users(
@@ -69,9 +70,21 @@ pub async fn login(
             println!("evreything is ok");
             if user.password == password {
                 println!("password is ok");
-                // let token = encode_jwt(user.username)?;
+                let jwt = encode_jwt(user.username, &state.jwt_secret)
+                    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+                    .unwrap_or_else(|_| "".to_string());
 
-                // Ok(Json(token));
+                let mut headers = HeaderMap::new();
+                let cookie = Cookie::build(("auth_token", jwt))
+                    .path("/")
+                    .max_age(Duration::days(14))
+                    .http_only(true);
+
+                headers.insert(
+                    header::SET_COOKIE,
+                    cookie.to_string().parse().unwrap(),
+                );
+
                 Redirect::to(&format!("/game-zone?user={}", &first_name))
                     .into_response()
             } else {
