@@ -1,8 +1,6 @@
-use std::sync::Arc;
-
-use axum::{routing::get, Extension, Json, Router};
-
 use crate::{database::queries, model::User, state::State};
+use axum::{routing::get, Extension, Json, Router};
+use std::sync::Arc;
 
 pub fn init() -> Router {
     Router::new().route("/users", get(get_users))

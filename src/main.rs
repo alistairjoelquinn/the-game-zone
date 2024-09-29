@@ -37,13 +37,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/login", post(handlers::login))
         .route("/logout", get(handlers::logout))
         .route("/image", get(aws::s3::get_s3_object))
-        .route("/users", get(handlers::get_users))
-        .route(
-            "/game-zone",
-            get(handlers::game_zone), //  .layer(middleware::from_fn(auth::authorize)),
-        )
         .nest("/components", components::init())
-        .nest("/api", api())
+        .nest("/api", api::init())
         .nest_service("/static", ServeDir::new("static"))
         .layer(
             ServiceBuilder::new()

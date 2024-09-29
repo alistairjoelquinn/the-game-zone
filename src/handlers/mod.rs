@@ -3,10 +3,7 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{
-        GameZoneTemplate, HomeTemplate, LoginFieldTemplate, User,
-        WrongPasswordTemplate,
-    },
+    model::{GameZoneTemplate, HomeTemplate, WrongPasswordTemplate},
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
@@ -15,10 +12,9 @@ use axum::{
     extract::{Form, Query},
     http::{header, Response, StatusCode},
     response::{Html, IntoResponse, Redirect},
-    Extension, Json,
+    Extension,
 };
 use axum_extra::{headers, TypedHeader};
-use axum_macros::debug_handler;
 use cookie::Cookie;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::{Deserialize, Serialize};
@@ -26,14 +22,6 @@ use std::sync::Arc;
 use time::Duration;
 use tracing::info;
 
-pub async fn get_users(
-    Extension(state): Extension<Arc<State>>,
-) -> Json<Vec<User>> {
-    let users = queries::fetch_all_users(&state.db).await.unwrap();
-    Json(users)
-}
-
-#[debug_handler]
 pub async fn home(
     cookies: TypedHeader<headers::Cookie>,
     Extension(state): Extension<Arc<State>>,
@@ -128,19 +116,4 @@ pub async fn login(
 
 pub async fn logout() -> Redirect {
     Redirect::to("/")
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-pub struct GameZoneQuery {
-    user: String,
-}
-
-pub async fn game_zone(
-    Query(params): Query<GameZoneQuery>,
-) -> impl IntoResponse {
-    let template = GameZoneTemplate {
-        first_name: &params.user,
-    };
-
-    Html(template.render().unwrap()).into_response()
 }
