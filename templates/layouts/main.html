@@ -16,7 +16,7 @@
     <!-- script for ensuring images fade in after loading -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const images = document.querySelectorAll("img");
+        const images = document.querySelectorAll("img:not([rel='icon'])");
         images.forEach((img) => {
           function fadeInImage() {
             setTimeout(() => {
