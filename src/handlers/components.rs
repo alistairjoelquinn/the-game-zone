@@ -1,8 +1,7 @@
+use crate::model::{GameZoneComponent, LoginFieldComponents};
 use askama_axum::{IntoResponse, Template};
 use axum::{extract::Query, response::Html, routing::get, Router};
 use serde::{Deserialize, Serialize};
-
-use crate::model::{GameZoneTemplate, LoginFieldTemplate};
 
 pub fn init() -> Router {
     Router::new()
@@ -19,7 +18,7 @@ pub async fn login_field(
     Query(params): Query<LoginFieldQuery>,
 ) -> Html<String> {
     let name = params.user;
-    let template = LoginFieldTemplate { first_name: &name };
+    let template = LoginFieldComponents { first_name: &name };
 
     Html(template.render().unwrap())
 }
@@ -32,7 +31,7 @@ pub struct GameZoneQuery {
 pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
 ) -> impl IntoResponse {
-    let template = GameZoneTemplate {
+    let template = GameZoneComponent {
         show_layout: false,
         first_name: &params.user,
     };

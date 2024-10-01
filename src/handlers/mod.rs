@@ -3,7 +3,7 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{GameZoneTemplateWrapper, HomeTemplate, WrongPasswordTemplate},
+    model::{GameZonePage, HomePage, WrongPasswordComponent},
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
@@ -39,7 +39,7 @@ pub async fn home(
 
                 let username = token_data.claims.username;
 
-                let game_zone_template = GameZoneTemplateWrapper {
+                let game_zone_template = GameZonePage {
                     show_layout: true,
                     first_name: &username,
                 };
@@ -56,7 +56,7 @@ pub async fn home(
         let mut users = queries::fetch_all_users(&state.db).await.unwrap();
         users.reverse();
 
-        let template = HomeTemplate { users };
+        let template = HomePage { users };
 
         Html(template.render().unwrap()).into_response()
     }
@@ -96,21 +96,21 @@ pub async fn login(
                     .status(StatusCode::FOUND)
                     .header(
                         header::LOCATION,
-                        format!("/game-zone?user={}", &first_name),
+                        format!("/components/game-zone?user={}", &first_name),
                     )
                     .header(header::SET_COOKIE, cookie.to_string())
                     .body(axum::body::Body::empty())
                     .unwrap()
                     .into_response()
             } else {
-                let template = WrongPasswordTemplate {
+                let template = WrongPasswordComponent {
                     first_name: &first_name,
                 };
                 Html(template.render().unwrap()).into_response()
             }
         }
         Err(_) => {
-            let template = WrongPasswordTemplate {
+            let template = WrongPasswordComponent {
                 first_name: &first_name,
             };
             Html(template.render().unwrap()).into_response()
