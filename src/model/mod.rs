@@ -35,3 +35,8 @@ pub struct GameZoneTemplate<'a> {
     pub show_layout: bool,
     pub first_name: &'a str,
 }
+
+pub struct GameZomeTemplateWrapper<'a> {
+    pub show_layout: bool,
+    pub first_name: &'a str,
+}

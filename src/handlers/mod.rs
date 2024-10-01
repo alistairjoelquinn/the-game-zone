@@ -3,9 +3,7 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{
-        GameZoneTemplate, HomeTemplate, LayoutTemplate, WrongPasswordTemplate,
-    },
+    model::{GameZoneTemplate, HomeTemplate, WrongPasswordTemplate},
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
@@ -42,16 +40,11 @@ pub async fn home(
                 let username = token_data.claims.username;
 
                 let game_zone_template = GameZoneTemplate {
+                    show_layout: true,
                     first_name: &username,
                 };
 
-                let game_zone_html = game_zone_template.render().unwrap();
-
-                let layout_template = LayoutTemplate {
-                    content: game_zone_html,
-                };
-
-                Html(layout_template.render().unwrap()).into_response()
+                Html(game_zone_template.render().unwrap()).into_response()
             }
             Err(_) => {
                 // Invalid JWT, redirect to login

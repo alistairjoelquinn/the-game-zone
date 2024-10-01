@@ -1,0 +1,10 @@
+{% if show_layout %}
+  {% extends "layouts/main.html" %}
+  
+  {% block content %}
+    {% include "game-zone.html" %}
+  {% endblock %}
+{% else %}
+  {% include "game-zone.html" %}
+{% endif %}
+

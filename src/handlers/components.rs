@@ -33,6 +33,7 @@ pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
 ) -> impl IntoResponse {
     let template = GameZoneTemplate {
+        show_layout: false,
         first_name: &params.user,
     };
 
