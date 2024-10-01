@@ -12,33 +12,33 @@ pub struct User {
 }
 
 #[derive(Template)]
-#[template(path = "home.html")]
-pub struct HomeTemplate {
+#[template(path = "home-page.html")]
+pub struct HomePage {
     pub users: Vec<User>,
 }
 
 #[derive(Template)]
-#[template(path = "login-field.html")]
-pub struct LoginFieldTemplate<'a> {
+#[template(path = "components/login-field.html")]
+pub struct LoginFieldComponents<'a> {
     pub first_name: &'a str,
 }
 
 #[derive(Template)]
-#[template(path = "wrong-password.html")]
-pub struct WrongPasswordTemplate<'a> {
+#[template(path = "components/wrong-password.html")]
+pub struct WrongPasswordComponent<'a> {
     pub first_name: &'a str,
 }
 
 #[derive(Template)]
-#[template(path = "game-zone.html")]
-pub struct GameZoneTemplate<'a> {
+#[template(path = "components/game-zone.html")]
+pub struct GameZoneComponent<'a> {
     pub show_layout: bool,
     pub first_name: &'a str,
 }
 
 #[derive(Template)]
-#[template(path = "game-zone-wrapper.html")]
-pub struct GameZoneTemplateWrapper<'a> {
+#[template(path = "game-zone-page.html")]
+pub struct GameZonePage<'a> {
     pub show_layout: bool,
     pub first_name: &'a str,
 }
