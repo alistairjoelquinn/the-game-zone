@@ -32,7 +32,6 @@ pub async fn game_zone(
     Query(params): Query<GameZoneQuery>,
 ) -> impl IntoResponse {
     let template = GameZoneComponent {
-        show_layout: false,
         first_name: &params.user,
     };
 

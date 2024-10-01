@@ -32,13 +32,11 @@ pub struct WrongPasswordComponent<'a> {
 #[derive(Template)]
 #[template(path = "components/game-zone.html")]
 pub struct GameZoneComponent<'a> {
-    pub show_layout: bool,
     pub first_name: &'a str,
 }
 
 #[derive(Template)]
 #[template(path = "game-zone-page.html")]
 pub struct GameZonePage<'a> {
-    pub show_layout: bool,
     pub first_name: &'a str,
 }

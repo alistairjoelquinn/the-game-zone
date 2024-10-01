@@ -40,7 +40,6 @@ pub async fn home(
                 let username = token_data.claims.username;
 
                 let game_zone_template = GameZonePage {
-                    show_layout: true,
                     first_name: &username,
                 };
 
