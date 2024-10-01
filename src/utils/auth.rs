@@ -12,23 +12,6 @@ pub struct Claims {
     pub username: String,
 }
 
-pub fn is_valid_token(token: &str, secret: &str) -> bool {
-    let key = DecodingKey::from_secret(secret.as_bytes());
-
-    match decode::<Claims>(token, &key, &Validation::default()) {
-        Ok(_) => true,
-        Err(e) => {
-            println!("Token validation error: {:?}", e);
-            false
-        }
-    }
-}
-
-//pub async fn auth(request: Request, next: Next) -> Response {
-//    let response = next.run(request).await;
-//    response
-// }
-
 pub fn encode_jwt(
     username: String,
     secret: &str,
