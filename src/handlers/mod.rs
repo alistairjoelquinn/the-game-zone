@@ -3,7 +3,7 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{GameZoneTemplate, HomeTemplate, WrongPasswordTemplate},
+    model::{GameZoneTemplateWrapper, HomeTemplate, WrongPasswordTemplate},
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
@@ -39,7 +39,7 @@ pub async fn home(
 
                 let username = token_data.claims.username;
 
-                let game_zone_template = GameZoneTemplate {
+                let game_zone_template = GameZoneTemplateWrapper {
                     show_layout: true,
                     first_name: &username,
                 };

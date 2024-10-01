@@ -36,7 +36,9 @@ pub struct GameZoneTemplate<'a> {
     pub first_name: &'a str,
 }
 
-pub struct GameZomeTemplateWrapper<'a> {
+#[derive(Template)]
+#[template(path = "game-zone-wrapper.html")]
+pub struct GameZoneTemplateWrapper<'a> {
     pub show_layout: bool,
     pub first_name: &'a str,
 }
