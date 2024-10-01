@@ -32,11 +32,6 @@ pub struct WrongPasswordTemplate<'a> {
 #[derive(Template)]
 #[template(path = "game-zone.html")]
 pub struct GameZoneTemplate<'a> {
+    pub show_layout: bool,
     pub first_name: &'a str,
-}
-
-#[derive(Template)]
-#[template(path = "layouts/main.html")]
-pub struct LayoutTemplate {
-    pub content: String,
 }
