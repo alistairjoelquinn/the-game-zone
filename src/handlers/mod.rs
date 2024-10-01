@@ -20,22 +20,21 @@ use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::Deserialize;
 use std::sync::Arc;
 use time::Duration;
-use tracing::info;
+use tracing::{info, warn};
 
 pub async fn home(
     cookies: TypedHeader<headers::Cookie>,
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
-    println!("Cookies: {:?}", cookies);
+    info!("Cookies: {:?}", cookies);
     if let Some(auth_token) = cookies.get("auth_token") {
-        println!("Auth token: {}", auth_token);
         match decode::<Claims>(
             auth_token,
             &DecodingKey::from_secret(state.jwt_secret.as_ref()),
             &Validation::default(),
         ) {
             Ok(token_data) => {
-                println!("Token data: {:?}", token_data);
+                info!("Token data: {:#?}", token_data);
 
                 let username = token_data.claims.username;
 
@@ -51,7 +50,7 @@ pub async fn home(
             }
         }
     } else {
-        println!("No auth token found");
+        warn!("No auth token found");
         let mut users = queries::fetch_all_users(&state.db).await.unwrap();
         users.reverse();
 
