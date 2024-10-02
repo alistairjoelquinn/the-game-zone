@@ -26,7 +26,6 @@ use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let cors = utils::initialise_cors();
     let db = database::initialise_database().await?;
     let s3 = aws::s3::init_s3().await?;
     let jwt_secret = std::env::var("JWT_SECRET")?;
@@ -45,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .layer(HandleErrorLayer::new(handle_timeout_error))
                 .layer(TimeoutLayer::new(Duration::from_secs(30)))
                 .layer(axum::middleware::from_fn(log_incoming_request))
-                .layer(cors)
+                .layer(utils::initialise_cors())
                 .layer(Extension(state)),
         );
 
