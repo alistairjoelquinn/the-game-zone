@@ -20,6 +20,7 @@ use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::Deserialize;
 use std::sync::Arc;
 use time::Duration;
+use tracing::{error, info, warn};
 
 pub async fn home(
     cookies: TypedHeader<headers::Cookie>,
@@ -32,6 +33,11 @@ pub async fn home(
             &Validation::default(),
         ) {
             Ok(token_data) => {
+                info!(
+                    "Valid session detected for user: {}",
+                    token_data.claims.username
+                );
+
                 let username = token_data.claims.username;
 
                 let game_zone_template = GameZonePage {
@@ -41,6 +47,8 @@ pub async fn home(
                 Html(game_zone_template.render().unwrap()).into_response()
             }
             Err(_) => {
+                error!("Invalid JWT token");
+
                 let error_page_template = ErrorPage;
 
                 Html(error_page_template.render().unwrap()).into_response()
@@ -81,6 +89,8 @@ pub async fn login(
                     .max_age(Duration::days(14))
                     .http_only(true);
 
+                info!("User logged in: {}", &first_name);
+
                 Response::builder()
                     .status(StatusCode::FOUND)
                     .header(
@@ -92,6 +102,7 @@ pub async fn login(
                     .unwrap()
                     .into_response()
             } else {
+                warn!("Wrong password entered for user: {}", &first_name);
                 let template = WrongPasswordComponent {
                     first_name: &first_name,
                 };
@@ -99,6 +110,7 @@ pub async fn login(
             }
         }
         Err(_) => {
+            error!("User not found: {}", &first_name);
             let template = WrongPasswordComponent {
                 first_name: &first_name,
             };
