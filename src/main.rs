@@ -3,7 +3,6 @@ mod database;
 mod handlers;
 mod middleware;
 mod model;
-mod state;
 mod utils;
 
 use crate::handlers::api;
@@ -16,7 +15,7 @@ use axum::{
     Extension, Router,
 };
 use middleware::log::log_incoming_request;
-use state::State;
+use model::State;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::net::TcpListener;

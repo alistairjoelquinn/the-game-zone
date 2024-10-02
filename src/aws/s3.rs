@@ -1,4 +1,4 @@
-use crate::state::State;
+use crate::model::State;
 use anyhow::{Context, Result};
 use aws_config::default_provider::credentials::DefaultCredentialsChain;
 use aws_config::meta::region::RegionProviderChain;

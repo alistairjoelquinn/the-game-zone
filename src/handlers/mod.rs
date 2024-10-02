@@ -3,8 +3,8 @@ pub mod components;
 
 use crate::{
     database::queries,
+    model::State,
     model::{ErrorPage, GameZonePage, HomePage, WrongPasswordComponent},
-    state::State,
     utils::auth::{encode_jwt, Claims},
 };
 use askama::Template;

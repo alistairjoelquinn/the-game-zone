@@ -1,4 +1,4 @@
-use crate::{database::queries, model::User, state::State};
+use crate::{database::queries, model::State, model::User};
 use axum::{routing::get, Extension, Json, Router};
 use std::sync::Arc;
 
