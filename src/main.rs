@@ -22,9 +22,17 @@ use tokio::net::TcpListener;
 use tower::timeout::TimeoutLayer;
 use tower::ServiceBuilder;
 use tower_http::services::ServeDir;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::new(
+            std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
+        ))
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+
     let db = database::initialise_database().await?;
     let s3 = aws::s3::init_s3().await?;
     let jwt_secret = std::env::var("JWT_SECRET")?;
