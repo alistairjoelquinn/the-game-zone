@@ -3,7 +3,7 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{GameZonePage, HomePage, WrongPasswordComponent},
+    model::{ErrorPage, GameZonePage, HomePage, WrongPasswordComponent},
     state::State,
     utils::auth::{encode_jwt, Claims},
 };
@@ -25,7 +25,6 @@ pub async fn home(
     cookies: TypedHeader<headers::Cookie>,
     Extension(state): Extension<Arc<State>>,
 ) -> impl IntoResponse {
-    println!("Cookies: {:?}", cookies);
     if let Some(auth_token) = cookies.get("auth_token") {
         match decode::<Claims>(
             auth_token,
@@ -33,8 +32,6 @@ pub async fn home(
             &Validation::default(),
         ) {
             Ok(token_data) => {
-                println!("Token data: {:#?}", token_data);
-
                 let username = token_data.claims.username;
 
                 let game_zone_template = GameZonePage {
@@ -43,10 +40,13 @@ pub async fn home(
 
                 Html(game_zone_template.render().unwrap()).into_response()
             }
-            Err(_) => Redirect::to("/login").into_response(),
+            Err(_) => {
+                let error_page_template = ErrorPage;
+
+                Html(error_page_template.render().unwrap()).into_response()
+            }
         }
     } else {
-        println!("No auth token found");
         let mut users = queries::fetch_all_users(&state.db).await.unwrap();
         users.reverse();
 

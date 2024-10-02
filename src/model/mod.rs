@@ -40,3 +40,7 @@ pub struct GameZoneComponent<'a> {
 pub struct GameZonePage<'a> {
     pub first_name: &'a str,
 }
+
+#[derive(Template)]
+#[template(path = "404.html")]
+pub struct ErrorPage;
