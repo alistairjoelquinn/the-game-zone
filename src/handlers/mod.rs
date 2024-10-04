@@ -3,9 +3,8 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::State,
-    model::{ErrorPage, GameZonePage, HomePage, WrongPasswordComponent},
-    utils::auth::{encode_jwt, Claims},
+    model::{ErrorPage, GameZonePage, HomePage, State, WrongPasswordComponent},
+    utils::auth::{encode_jwt, verify_password, Claims},
 };
 use askama::Template;
 use axum::{
@@ -79,7 +78,8 @@ pub async fn login(
 
     match queries::fetch_user_by_first_name(&state.db, &first_name).await {
         Ok(user) => {
-            if user.password == password {
+            if let Ok() = verify_password(&password, &user.password_hash).await
+            {
                 let jwt = encode_jwt(user.username, &state.jwt_secret)
                     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
                     .unwrap_or_else(|_| "".to_string());

@@ -7,7 +7,7 @@ CREATE TABLE users (
   first_name VARCHAR(255) NOT NULL CHECK (first_name != ''),
   last_name VARCHAR(255) NOT NULL CHECK (last_name != ''),
   image VARCHAR(255) NOT NULL CHECK (image != ''),
-  password VARCHAR NOT NULL
+  password_hash VARCHAR NOT NULL
 );
 
 CREATE TABLE games (
