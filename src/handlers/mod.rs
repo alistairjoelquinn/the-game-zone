@@ -8,6 +8,7 @@ use crate::{
 };
 use askama::Template;
 use axum::{
+    body::Body,
     extract::Form,
     http::{header, Response, StatusCode},
     response::{Html, IntoResponse, Redirect},
@@ -76,47 +77,57 @@ pub async fn login(
     let first_name = form.first_name;
     let password = form.password;
 
-    match queries::fetch_user_by_first_name(&state.db, &first_name).await {
-        Ok(user) => {
-            if let Ok() = verify_password(&password, &user.password_hash).await
-            {
-                let jwt = encode_jwt(user.username, &state.jwt_secret)
-                    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
-                    .unwrap_or_else(|_| "".to_string());
-
-                let cookie = Cookie::build(("auth_token", jwt))
-                    .path("/")
-                    .max_age(Duration::days(14))
-                    .http_only(true);
-
-                info!("User logged in: {}", &first_name);
-
-                Response::builder()
-                    .status(StatusCode::FOUND)
-                    .header(
-                        header::LOCATION,
-                        format!("/components/game-zone?user={}", &first_name),
-                    )
-                    .header(header::SET_COOKIE, cookie.to_string())
-                    .body(axum::body::Body::empty())
-                    .unwrap()
-                    .into_response()
-            } else {
-                warn!("Wrong password entered for user: {}", &first_name);
-                let template = WrongPasswordComponent {
-                    first_name: &first_name,
-                };
-                Html(template.render().unwrap()).into_response()
+    let user =
+        match queries::fetch_user_by_first_name(&state.db, &first_name).await {
+            Ok(user) => user,
+            Err(_) => {
+                error!("User not found: {}", &first_name);
+                return render_wrong_password(&first_name);
             }
-        }
+        };
+
+    let is_valid = match verify_password(&password, &user.password_hash).await {
+        Ok(valid) => valid,
         Err(_) => {
-            error!("User not found: {}", &first_name);
-            let template = WrongPasswordComponent {
-                first_name: &first_name,
-            };
-            Html(template.render().unwrap()).into_response()
+            error!("Error verifying password for user: {}", &first_name);
+            return render_wrong_password(&first_name);
         }
+    };
+
+    if !is_valid {
+        warn!("Wrong password entered for user: {}", &first_name);
+        return render_wrong_password(&first_name);
     }
+
+    let jwt = match encode_jwt(user.username, &state.jwt_secret) {
+        Ok(token) => token,
+        Err(_) => {
+            error!("Failed to generate JWT for user: {}", &first_name);
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+        }
+    };
+
+    let cookie = Cookie::build(("auth_token", jwt))
+        .path("/")
+        .max_age(Duration::days(14))
+        .http_only(true);
+
+    info!("User logged in: {}", &first_name);
+    Response::builder()
+        .status(StatusCode::FOUND)
+        .header(
+            header::LOCATION,
+            format!("/components/game-zone?user={}", &first_name),
+        )
+        .header(header::SET_COOKIE, cookie.to_string())
+        .body(axum::body::Body::empty())
+        .unwrap()
+        .into_response()
+}
+
+fn render_wrong_password(first_name: &str) -> Response<Body> {
+    let template = WrongPasswordComponent { first_name };
+    Html(template.render().unwrap()).into_response()
 }
 
 pub async fn logout() -> Redirect {
