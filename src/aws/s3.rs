@@ -81,7 +81,7 @@ async fn retrieve_s3_object(
     name: String,
 ) -> Result<Option<Response>> {
     let bucket = "askama-game-zone";
-    let key = format!("{}.jpeg", name);
+    let key = format!("{}.jpg", name);
 
     info!(
         "Attempting to fetch object from S3. Bucket: {}, Key: {}",

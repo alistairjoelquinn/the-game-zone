@@ -7,10 +7,10 @@
 >
   <h4 class="p-4 font-playpen text-2xl text-gray-800">Hello {{first_name}}, choose a game to play...</h4>
 
-  <div class="h-full w-full flex-1">
+  <div class="grid h-full w-full flex-1 grid-cols-2 grid-rows-2">
     {% for game in games %}
     <div
-      class="group relative h-1/2 w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:h-full hover:w-full hover:cursor-pointer"
+      class="group relative col-span-1 row-span-1 overflow-hidden bg-gray-200 transition-all duration-500 hover:col-span-2 hover:col-start-1 hover:row-span-2 hover:row-start-1 hover:cursor-pointer"
     >
       <img
         id="game-image-{{game.slug}}"
