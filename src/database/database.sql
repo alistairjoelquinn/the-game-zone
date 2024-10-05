@@ -6,7 +6,7 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   first_name VARCHAR(255) NOT NULL CHECK (first_name != ''),
   last_name VARCHAR(255) NOT NULL CHECK (last_name != ''),
-  image VARCHAR(255) NOT NULL CHECK (image != ''),
+  username VARCHAR(255) NOT NULL CHECK (username != ''),
   password_hash VARCHAR NOT NULL
 );
 

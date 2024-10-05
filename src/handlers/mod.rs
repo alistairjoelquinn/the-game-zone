@@ -4,8 +4,9 @@ pub mod components;
 use crate::{
     database::queries,
     model::{ErrorPage, GameZonePage, HomePage, State, WrongPasswordComponent},
-    utils::auth::{encode_jwt, verify_password, Claims},
+    utils::auth::{encode_jwt, Claims},
 };
+use bcrypt::verify;
 use askama::Template;
 use axum::{
     body::Body,
@@ -86,12 +87,12 @@ pub async fn login(
             }
         };
 
-    let is_valid = match verify_password(&password, &user.password_hash).await {
+    let is_valid = match verify(&password, &user.password_hash) {
         Ok(valid) => valid,
         Err(_) => {
-            error!("Error verifying password for user: {}", &first_name);
-            return render_wrong_password(&first_name);
-        }
+            error!("Failed to verify password for user: {}", &first_name);
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+        } 
     };
 
     if !is_valid {
