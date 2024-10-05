@@ -40,9 +40,11 @@ pub async fn home(
                 );
 
                 let username = token_data.claims.username;
+                let games = queries::fetch_all_games(&state.db).await.unwrap();
 
                 let game_zone_template = GameZonePage {
                     first_name: &username,
+                    games,
                 };
 
                 Html(game_zone_template.render().unwrap()).into_response()

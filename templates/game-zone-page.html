@@ -6,5 +6,23 @@
   class="flex h-full w-full animate-fade-in flex-col items-center justify-center bg-gray-100 opacity-0"
 >
   <h4>Hello {{first_name}}, choose a game to play!</h4>
+
+  {% for game in games %}
+  <div
+    class="group relative h-full w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:w-full hover:cursor-pointer"
+  >
+    <img
+      id="game-image-{{game.slug}}"
+      src="/images?name={{game.slug}}"
+      alt="{{game.title}}"
+      class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+    />
+    <h3
+      class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 animate-fade-in font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
+    >
+      {{ game.title }}
+    </h3>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
