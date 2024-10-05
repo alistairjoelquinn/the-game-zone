@@ -1,4 +1,4 @@
-use crate::model::User;
+use crate::model::{Game, User};
 use bcrypt::{hash, DEFAULT_COST};
 use sqlx::PgPool;
 

@@ -20,6 +20,14 @@ pub struct User {
     pub password_hash: String,
 }
 
+#[derive(Debug, Deserialize, Serialize, FromRow)]
+pub struct Game {
+    pub id: i32,
+    pub title: String,
+    pub description: String,
+    pub slug: String,
+}
+
 #[derive(Template)]
 #[template(path = "home-page.html")]
 pub struct HomePage {
