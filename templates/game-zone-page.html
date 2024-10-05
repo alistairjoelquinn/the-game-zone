@@ -3,26 +3,28 @@
 <!-- component content -->
 {% block content %}
 <div
-  class="flex h-full w-full animate-fade-in flex-col items-center justify-center bg-gray-100 opacity-0"
+  class="flex h-full w-full animate-fade-in flex-col items-center justify-start bg-gray-100 opacity-0"
 >
-  <h4>Hello {{first_name}}, choose a game to play!</h4>
+  <h4 class="p-4 font-playpen text-2xl text-gray-800">Hello {{first_name}}, choose a game to play...</h4>
 
-  {% for game in games %}
-  <div
-    class="group relative h-full w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:w-full hover:cursor-pointer"
-  >
-    <img
-      id="game-image-{{game.slug}}"
-      src="/images?name={{game.slug}}"
-      alt="{{game.title}}"
-      class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
-    />
-    <h3
-      class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 animate-fade-in font-playpen text-5xl text-white transition-all duration-500 group-hover:text-7xl"
+  <div class="h-full w-full flex-1">
+    {% for game in games %}
+    <div
+      class="group relative h-1/2 w-1/2 overflow-hidden bg-gray-200 transition-all duration-500 hover:h-full hover:w-full hover:cursor-pointer"
     >
-      {{ game.title }}
-    </h3>
+      <img
+        id="game-image-{{game.slug}}"
+        src="/images?name={{game.slug}}"
+        alt="{{game.title}}"
+        class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out"
+      />
+      <h3
+        class="text-shadow absolute bottom-1/4 left-1/2 z-20 -translate-x-1/2 animate-fade-in whitespace-nowrap font-playpen text-3xl text-white transition-all duration-500 group-hover:text-7xl"
+      >
+        {{ game.title }}
+      </h3>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 {% endblock %}
