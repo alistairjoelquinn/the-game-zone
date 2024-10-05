@@ -3,10 +3,9 @@ pub mod components;
 
 use crate::{
     database::queries,
-    model::{ErrorPage, GameZonePage, HomePage, State, WrongPasswordComponent},
+    model::{ErrorPage, GameZonePage, HomePage, State, WentWrongComponent},
     utils::auth::{encode_jwt, Claims},
 };
-use bcrypt::verify;
 use askama::Template;
 use axum::{
     body::Body,
@@ -16,6 +15,7 @@ use axum::{
     Extension,
 };
 use axum_extra::{headers, TypedHeader};
+use bcrypt::verify;
 use cookie::Cookie;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde::Deserialize;
@@ -83,28 +83,28 @@ pub async fn login(
             Ok(user) => user,
             Err(_) => {
                 error!("User not found: {}", &first_name);
-                return render_wrong_password(&first_name);
+                return render_went_wrong(&first_name);
             }
         };
 
     let is_valid = match verify(&password, &user.password_hash) {
         Ok(valid) => valid,
         Err(_) => {
-            error!("Failed to verify password for user: {}", &first_name);
-            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
-        } 
+            error!("Error checking password for user: {}", &first_name);
+            return render_went_wrong(&first_name);
+        }
     };
 
     if !is_valid {
         warn!("Wrong password entered for user: {}", &first_name);
-        return render_wrong_password(&first_name);
+        return render_went_wrong(&first_name);
     }
 
     let jwt = match encode_jwt(user.username, &state.jwt_secret) {
         Ok(token) => token,
         Err(_) => {
             error!("Failed to generate JWT for user: {}", &first_name);
-            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+            return render_went_wrong(&first_name);
         }
     };
 
@@ -126,8 +126,8 @@ pub async fn login(
         .into_response()
 }
 
-fn render_wrong_password(first_name: &str) -> Response<Body> {
-    let template = WrongPasswordComponent { first_name };
+fn render_went_wrong(first_name: &str) -> Response<Body> {
+    let template = WentWrongComponent { first_name };
     Html(template.render().unwrap()).into_response()
 }
 

@@ -33,8 +33,8 @@ pub struct LoginFieldComponents<'a> {
 }
 
 #[derive(Template)]
-#[template(path = "components/wrong-password.html")]
-pub struct WrongPasswordComponent<'a> {
+#[template(path = "components/went-wrong.html")]
+pub struct WentWrongComponent<'a> {
     pub first_name: &'a str,
 }
 
