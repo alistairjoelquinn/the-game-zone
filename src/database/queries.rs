@@ -1,5 +1,5 @@
 use crate::model::User;
-use crate::utils::auth::hash_password;
+use bcrypt::{hash, DEFAULT_COST};
 use sqlx::PgPool;
 
 pub async fn fetch_user_by_first_name(
@@ -29,7 +29,7 @@ pub async fn _update_user(
     .bind(user.first_name)
     .bind(user.last_name)
     .bind(user.username)
-    .bind(hash_password(&user.password_hash).unwrap())
+    .bind(hash(&user.password_hash, DEFAULT_COST).unwrap())
     .bind(id)
     .fetch_one(pool)
     .await
