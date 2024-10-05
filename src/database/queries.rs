@@ -35,3 +35,9 @@ pub async fn _update_user(
     .fetch_one(pool)
     .await
 }
+
+pub async fn fetch_all_games(pool: &PgPool) -> Result<Vec<Game>, sqlx::Error> {
+    sqlx::query_as::<_, Game>("SELECT * FROM games")
+        .fetch_all(pool)
+        .await
+}
