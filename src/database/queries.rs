@@ -18,6 +18,7 @@ pub async fn fetch_all_users(pool: &PgPool) -> Result<Vec<User>, sqlx::Error> {
         .await
 }
 
+// kept as an example for upcoming update logic
 pub async fn _update_user(
     pool: &PgPool,
     user: User,
