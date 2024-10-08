@@ -5,11 +5,17 @@
 <div
   class="flex h-full w-full animate-fade-in flex-col items-center justify-start bg-gray-100 opacity-0"
 >
-  <h4 class="p-4 font-playpen text-2xl text-gray-800">Hello {{first_name}}, choose a game to play...</h4>
+  <h4 class="p-4 font-playpen text-2xl text-gray-800">
+    Hello {{first_name}}, choose a game to play...
+  </h4>
 
   <div class="grid h-full w-full flex-1 grid-cols-2 grid-rows-2">
     {% for game in games %}
     <div
+      hx-get="/game/?title={{ game.title }}"
+      hx-trigger="click"
+      hx-target="#container"
+      hx-swap="innerHTML"
       class="group relative col-span-1 row-span-1 overflow-hidden bg-gray-200 transition-all duration-500 hover:col-span-2 hover:col-start-1 hover:row-span-2 hover:row-start-1 hover:cursor-pointer"
     >
       <img
