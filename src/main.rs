@@ -42,7 +42,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/", get(handlers::home))
         .route("/login", post(handlers::login))
         .route("/logout", get(handlers::logout))
-        .route("/games", get(handlers::games))
         .route("/images", get(aws::s3::get_s3_object))
         .nest("/components", components::init())
         .nest("/api", api::init())

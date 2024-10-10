@@ -7,6 +7,7 @@ pub fn init() -> Router {
     Router::new()
         .route("/login-field", get(login_field))
         .route("/game-zone", get(game_zone)) //  .layer(middleware::from_fn(auth::authorize)),
+        .route("/games", get(games))
 }
 
 #[derive(Deserialize, Serialize)]
@@ -34,6 +35,17 @@ pub async fn game_zone(
     let template = GameZoneComponent {
         first_name: &params.user,
     };
+
+    Html(template.render().unwrap()).into_response()
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct GameQuery {
+    slug: String,
+}
+
+pub async fn games(Query(params): Query<GameQuery>) -> impl IntoResponse {
+    let template = GameComponent { slug: &params.slug };
 
     Html(template.render().unwrap()).into_response()
 }
