@@ -12,7 +12,7 @@
   <div class="grid h-full w-full flex-1 grid-cols-2 grid-rows-2">
     {% for game in games %}
     <div
-      hx-get="/games/?title={{ game.title }}"
+      hx-get="/games/?slug={{ game.slug }}"
       hx-trigger="click"
       hx-target="#container"
       hx-swap="innerHTML"
