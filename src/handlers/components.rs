@@ -1,4 +1,4 @@
-use crate::model::{GameZoneComponent, LoginFieldComponents};
+use crate::model::{GameComponent, GameZoneComponent, LoginFieldComponents};
 use askama_axum::{IntoResponse, Template};
 use axum::{extract::Query, response::Html, routing::get, Router};
 use serde::{Deserialize, Serialize};
