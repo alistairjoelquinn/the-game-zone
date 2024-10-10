@@ -53,6 +53,12 @@ pub struct GameZoneComponent<'a> {
 }
 
 #[derive(Template)]
+#[template(path = "components/game.html")]
+pub struct GameComponent<'a> {
+    pub slug: &'a str,
+}
+
+#[derive(Template)]
 #[template(path = "game-zone-page.html")]
 pub struct GameZonePage<'a> {
     pub first_name: &'a str,
